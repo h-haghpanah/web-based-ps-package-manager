@@ -1,0 +1,65 @@
+
+.grey-bg {  
+    /* background-color: #051a38; */
+    background-color: black;
+}
+
+.card-content {
+    background-color: rgb(0, 8, 46);
+    height: 155px;
+}   
+
+body{background-color: black;}
+
+.hgreen{
+    color: #69FF47;
+}
+.hwhite{
+    color: #fff;
+}
+
+.icon-image{
+    width: 60px;
+}
+
+.btn-download{
+    width: 60px;
+    height: 30px;
+    font-size: 14px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.btn-crack{
+    width: 60px;
+    height: 30px;
+    font-size: 14px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.title{
+    background-color:rgb(56, 56, 56);
+    border-radius: 10px;
+
+}
+
+.list_img{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 30px;
+}
+
+
+
+.card .card-img-top {
+    /* Set the maximum width for the image */
+    max-width: 100%;
+    /* Set the maximum height for the image while maintaining aspect ratio */
+    max-height: 162px; /* Adjust the maximum height as needed */
+    width: auto;
+  }

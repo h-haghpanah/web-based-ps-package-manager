@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<link href="../assets/css/game.css" rel="stylesheet">
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/jquery.js"></script>
+<script src="../assets/js/game.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+
+
+  
+
+    <section id="hero" style="background-image: url('{{background_image}}');">
+        <h1>{{name}}</h1>
+
+    </section>
+    <div class="card text-center">
+        <div class="card-header">
+          Packages
+        </div>
+        <div class="card-body">
+            {% if install_btn %}
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#installModal">Install</a>
+            {% endif %}
+            {% if update_btn %}
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update</a>
+            {% endif %}
+            {% if dlc_btn %}
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#dlcModal">DLC</a>
+            {% endif %}
+        </div>
+
+      </div>
+   
+<!-- Install Modal -->
+<div class="modal" id="installModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Install</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{install_links}}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Update Modal -->
+  <div class="modal" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {{update_links}}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DLC Modal -->
+  <div class="modal" id="dlcModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">DLC</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {{dlc_links}}
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+{% endblock %}
