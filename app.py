@@ -2,7 +2,7 @@
 from flask import Flask,render_template,send_from_directory,jsonify
 import os
 import configparser
-from api import rawg_search
+from api import rawg_search,package_sender
 import xml.etree.ElementTree as ET
 
 dirname = os.path.dirname(__file__)
@@ -86,39 +86,52 @@ def game(path):
     install_path = os.path.join(pkg_path, path, "Install")
     if os.path.exists(install_path):
         install_btn = True
-        pkgs = os.listdir(install_path)
-        install_links = ""
-        for pkg in pkgs:
-            install_links += f'<a href="/send_pkg/{path}/Install/{pkg}" class="btn btn-primary">{pkg}</a>'
+        # pkgs = os.listdir(install_path)
+        # install_links = ""
+        # for pkg in pkgs:
+        #     install_links += f'<a href="/send_pkg/{path}/Install/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         install_btn = False
-        install_links = ""
+        # install_links = ""
     
     update_path = os.path.join(pkg_path, path, "Update")
     if os.path.exists(update_path):
         update_btn = True
         pkgs = os.listdir(update_path)
-        update_links = ""
-        for pkg in pkgs:
-            update_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
+        # update_links = ""
+        # for pkg in pkgs:
+        #     update_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         update_btn = False
-        update_links = ""
+        # update_links = ""
         
     dlc_path = os.path.join(pkg_path, path, "DLC")
     if os.path.exists(dlc_path):
         dlc_btn = True
-        pkgs = os.listdir(dlc_path)
-        dlc_links = ""
-        for pkg in pkgs:
-            dlc_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
+        # pkgs = os.listdir(dlc_path)
+        # dlc_links = ""
+        # for pkg in pkgs:
+        #     dlc_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         dlc_btn = False
-        dlc_links  = ""
+        # dlc_links  = ""
         
-    return render_template("game.html",background_image=background_image,name=name,install_btn=install_btn,update_btn=update_btn,dlc_btn=dlc_btn,install_links=install_links,update_links=update_links,dlc_links=dlc_links)
+    return render_template("game.html",background_image=background_image,name=name,install_btn=install_btn,update_btn=update_btn,dlc_btn=dlc_btn,game_path=path)
 
+@app.route('/pkg_list/<path:path>' , methods=['GET', 'POST'])
+def pkg_list(path):
+    pkgs = os.listdir(os.path.join(pkg_path, path))
+    # path = path.split("/")
+    # folder = path[1]
+    links = []
+    for pkg in pkgs:
+        links.append({"pkg":pkg,"path":path})
+    return jsonify(links)
 
+@app.route('/send_pkg/<path:path>' , methods=['GET', 'POST'])
+def send_pkg(path):
+    package_sender(path,web_server_ip,web_server_port,"172.16.5.60")
+    return jsonify({"success":True})
 
 #############################################
 #############################################
