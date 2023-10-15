@@ -7,3 +7,11 @@
     padding: 100px 0;
 }
 
+
+.d-grid {
+    display: grid !important
+}
+
+.gap-2 {
+    gap: .5rem !important
+}

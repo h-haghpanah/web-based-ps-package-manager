@@ -130,8 +130,17 @@ def pkg_list(path):
 
 @app.route('/send_pkg/<path:path>' , methods=['GET', 'POST'])
 def send_pkg(path):
-    package_sender(path,web_server_ip,web_server_port,"172.16.5.60")
-    return jsonify({"success":True})
+    try:
+        response = package_sender(path,web_server_ip,web_server_port,"172.16.5.60")
+        print(response)
+        if response["status"] == "success":
+            status = True
+        else:
+            status = False
+        return jsonify({"success":status})
+    except:
+        status = False
+        return jsonify({"success":status})
 
 #############################################
 #############################################

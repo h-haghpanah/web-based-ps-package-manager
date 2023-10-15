@@ -2,6 +2,7 @@ import requests
 import json
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
+import json
 
 def package_sender(pkg_name,web_ip,web_port,ps4_ip):
 
@@ -17,7 +18,7 @@ def package_sender(pkg_name,web_ip,web_port,ps4_ip):
         "Content-Type": "application/json"
     }
     response = requests.post(ps4_api, data=json.dumps(data), headers=headers)
-    print(response.text)
+    return json.loads(response.text)
     
     
     
