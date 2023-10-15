@@ -13,23 +13,6 @@ function read_games(){
 
                 }
                 else{
-                // items += '<div class="col-xl-3 col-sm-6 col-md-4 col-6">\n'+
-                //   '<div class="card">\n'+
-                //     '<div class="card-content">\n'+
-                //       '<div class="card-body">\n'+
-                //         '<p style="text-align: center;" class="title hwhite">'+response[i].replace(/_/g, ' ')+'</p>\n'+
-                //         '<div class="media d-flex">\n'+
-                //         '<div class="align-self-center">\n'+
-                //             '<img src="../assets/images/icons/pkg.png" alt="" class="shabnam icon-image">\n'+
-                //           '</div>\n'+
-                //           '<div class="media-body text-right align-self-center list_img">\n'+
-                //             '<a class="btn btn-success btn-download" href="../programs/archive/winrar.exe">View</a>\n'+
-                //           '</div>\n'+
-                //         '</div>\n'+
-                //       '</div>\n'+
-                //     '</div>\n'+
-                //   '</div>\n'+
-                // '</div>\n'
                 items += '<a href="'+response[i].url+'">\n'+
                 '<div class="col-xl-3 col-sm-6 col-md-4 col-6">\n'+
                 '<div class="card rounded text-white bg-dark" style="width: 18rem;">\n'+

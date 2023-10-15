@@ -1,20 +1,19 @@
 
 
 function pkg_list(game_path,folder){
+    
     $.ajax({
         url:"/pkg_list/"+game_path+"/"+folder,
         method:"GET",
         success:function(response){
             items = '<div class="d-grid gap-2">'
             ignore_items = ['.DS_Store']
-            console.log(response)
             for(var i in response){
-                console.log(i)
                 if (ignore_items.includes(response[i])){
 
                 }
                 else{
-                    items += '<button type="button" onclick="send_pkg('+"'"+'/send_pkg/'+response[i].path+'/'+response[i].pkg+"'"+')"  class="btn btn-dark">'+response[i].pkg+'</button>'
+                    items += '<button type="button" id="pkg_btn_'+i+'" onclick="send_pkg('+"'"+'/send_pkg/'+response[i].path+'/'+response[i].pkg+"'"+','+"'"+'pkg_btn_'+i+"'"+')"  class="btn btn-dark">'+response[i].pkg+'</button>'
                 // items += '<button class="btn btn-secondary" href="/send_pkg/'+response[i].path+'/'+response[i].pkg+'">'+response[i].pkg+'</button>'
                 }
 
@@ -33,11 +32,13 @@ function pkg_list(game_path,folder){
  }
 
 
-function send_pkg(path){
+function send_pkg(path,pkg_btn_id){
+    $("#"+pkg_btn_id).prop("disabled",true)
     $.ajax({
         url:path,
         method:"GET",
         success:function(response){
+            $("#"+pkg_btn_id).prop("disabled",false)
             if(response.success){
                 showsuccess("Package Sent Successfully.")
             }else{
@@ -48,32 +49,3 @@ function send_pkg(path){
 }
 
 
-function showerror(msg){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-start',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-    });
-    
-    Toast.fire({
-      icon: 'error',
-      title: msg
-    })
-  }
-  
-  function showsuccess(msg){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-start',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-    });
-    
-    Toast.fire({
-      icon: 'success',
-      title: msg
-    })
-  }

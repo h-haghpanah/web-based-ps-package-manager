@@ -1,5 +1,5 @@
 
-from flask import Flask,render_template,send_from_directory,jsonify
+from flask import Flask,render_template,send_from_directory,jsonify,request
 import os
 import configparser
 from api import rawg_search,package_sender
@@ -17,14 +17,13 @@ pkg_path = config.get("pkg","path")
 
 api_key = config.get("rawg","api_key")
 igone_list = ['.DS_Store']
-# Upload_attachment = os.path.abspath(os.path.dirname(__file__))+"/assets/images/fund_attachments"
-# Gallery_attachment = os.path.abspath(os.path.dirname(__file__))+"/assets/images/project_gallery"
+
+ps_addresses = config.get("PS","ip_addresses")
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mywebKey"
-# app.config["ATTACHMENT_UPLOADS"] =Upload_attachment
-# app.config["GALLERY_UPLOADS"] =Gallery_attachment
+
 
 
 @app.errorhandler(404)
@@ -36,12 +35,6 @@ def page_not_found(e):
 
 @app.route("/")
 def root():
-    # games = os.listdir("/Users/hesam/Desktop/pkg")
-    # igone_list = ['.DS_Store']
-    # game_list = ""
-    # for item in games:
-    #     game_list += '<div class="row" style="flex-direction: row-reverse;">'+\
-    #     '</div>'
     return render_template("home.html")
 
 @app.route("/game_list")
@@ -72,7 +65,7 @@ def game_list():
 
     return jsonify(all_games)
     
-@app.route('/game/<path:path>' , methods=['GET', 'POST'])
+@app.route('/game/<path:path>' , methods=['GET'])
 def game(path):
     xml_path = os.path.join("assets/game_info", path+".xml")
     if  not os.path.exists(xml_path):
@@ -86,52 +79,38 @@ def game(path):
     install_path = os.path.join(pkg_path, path, "Install")
     if os.path.exists(install_path):
         install_btn = True
-        # pkgs = os.listdir(install_path)
-        # install_links = ""
-        # for pkg in pkgs:
-        #     install_links += f'<a href="/send_pkg/{path}/Install/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         install_btn = False
-        # install_links = ""
-    
+
     update_path = os.path.join(pkg_path, path, "Update")
     if os.path.exists(update_path):
         update_btn = True
-        pkgs = os.listdir(update_path)
-        # update_links = ""
-        # for pkg in pkgs:
-        #     update_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         update_btn = False
-        # update_links = ""
-        
+     
     dlc_path = os.path.join(pkg_path, path, "DLC")
     if os.path.exists(dlc_path):
         dlc_btn = True
-        # pkgs = os.listdir(dlc_path)
-        # dlc_links = ""
-        # for pkg in pkgs:
-        #     dlc_links += f'<a href="/send_pkg/{path}/Update/{pkg}" class="btn btn-primary">{pkg}</a>'
     else:
         dlc_btn = False
-        # dlc_links  = ""
         
     return render_template("game.html",background_image=background_image,name=name,install_btn=install_btn,update_btn=update_btn,dlc_btn=dlc_btn,game_path=path)
 
-@app.route('/pkg_list/<path:path>' , methods=['GET', 'POST'])
+@app.route('/pkg_list/<path:path>' , methods=['GET'])
 def pkg_list(path):
     pkgs = os.listdir(os.path.join(pkg_path, path))
-    # path = path.split("/")
-    # folder = path[1]
     links = []
     for pkg in pkgs:
         links.append({"pkg":pkg,"path":path})
     return jsonify(links)
 
-@app.route('/send_pkg/<path:path>' , methods=['GET', 'POST'])
+@app.route('/send_pkg/<path:path>' , methods=['GET'])
 def send_pkg(path):
     try:
-        response = package_sender(path,web_server_ip,web_server_port,"172.16.5.60")
+        with open("ps_ip.txt", 'r') as file:
+            ps_ip = file.read()
+            file.close()
+        response = package_sender(path,web_server_ip,web_server_port,ps_ip)
         print(response)
         if response["status"] == "success":
             status = True
@@ -141,7 +120,50 @@ def send_pkg(path):
     except:
         status = False
         return jsonify({"success":status})
+    
 
+@app.route('/update_ps_address' , methods=['POST'])
+def update_ps_address():
+    try:
+        ps_ip = request.form["ps_ip"]
+        ps_ip_file = 'ps_ip.txt'
+        with open(ps_ip_file, 'w') as file:
+            file.write(ps_ip)
+            file.close()
+        return jsonify({"success":True})
+    except:
+        return jsonify({"success":False})
+
+@app.route('/read_ps_addresses' , methods=['GET'])
+def read_ps_addresses():
+    try:
+        addresses = []
+        with open("ps_ip.txt", 'r') as file:
+            ps_ip = file.read()
+            file.close()
+        ps_addresses_array = ps_addresses.split("$")
+        condition = False
+        for item in ps_addresses_array:
+            item2 = item.split("@")
+            if item2[1] == ps_ip:
+                condition = True
+                addresses.append({"name":item2[0],"address":item2[1],"selected":True})
+            elif ps_addresses_array.index(item) != len(ps_addresses_array) -1 :
+                addresses.append({"name":item2[0],"address":item2[1],"selected":False})
+            else:
+                if condition:
+                    addresses.append({"name":item2[0],"address":item2[1],"selected":False})
+                else:
+                    addresses.append({"name":item2[0],"address":item2[1],"selected":True})
+                    ps_ip_file = 'ps_ip.txt'
+                    with open(ps_ip_file, 'w') as file:
+                        file.write(item2[1])
+                        file.close()
+            
+        print(addresses)
+        return jsonify({"success":True,"addresses":addresses})
+    except:
+        return jsonify({"success":False})
 #############################################
 #############################################
 ################## ASSETS ###################
