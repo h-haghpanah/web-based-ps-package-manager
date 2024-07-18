@@ -60,10 +60,12 @@ def game(path):
     if not os.path.exists(xml_path):
         name = path
         background_image = "assets/images/icons/pkg.png"
+        desc = "No desc"
     else:
         tree = ET.parse(xml_path)
         root = tree.getroot()
         name = root.find("name").text
+        desc = root.find("desc").text
         background_image = root.find("background_image").text
     install_path = os.path.join(LOCAL_SMB_PATH_TO_LIST_PKG, path, "Install")
     if os.path.exists(install_path):
