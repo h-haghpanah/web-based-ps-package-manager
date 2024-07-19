@@ -70,12 +70,16 @@ def game_list():
                 released = root.find("released").text
                 updated = root.find("updated").text
                 rating = root.find("rating").text
-                ratings_count = int(root.find("ratings_count").text)
-                if ratings_count >= 1000:
-                    ratings_count = round(ratings_count / 1000, 1)
-                    ratings_count = str(ratings_count) + "k"
-                else:
-                    ratings_count = str(ratings_count)
+                try:
+                    ratings_count = int(root.find("ratings_count").text)
+                    if ratings_count >= 1000:
+                        ratings_count = round(ratings_count / 1000, 1)
+                        ratings_count = str(ratings_count) + "k"
+                    else:
+                        ratings_count = str(ratings_count)
+                except Exception as e:
+                    print(e)
+                    ratings_count = "Not specified!"
                 metacritic = root.find("metacritic").text
                 background_image = root.find("background_image").text
                 url = "game/"+item
@@ -105,12 +109,16 @@ def game(path):
         released = root.find("released").text
         updated = root.find("updated").text
         rating = root.find("rating").text
-        ratings_count = int(root.find("ratings_count").text)
-        if ratings_count >= 1000:
-            ratings_count = round(ratings_count / 1000, 1)
-            ratings_count = str(ratings_count) + "k"
-        else:
-            ratings_count = str(ratings_count)
+        try:
+            ratings_count = int(root.find("ratings_count").text)
+            if ratings_count >= 1000:
+                ratings_count = round(ratings_count / 1000, 1)
+                ratings_count = str(ratings_count) + "k"
+            else:
+                ratings_count = str(ratings_count)
+        except Exception as e:
+            print(e)
+            ratings_count = "Not specified!"
         metacritic = root.find("metacritic").text
         background_image = root.find("background_image").text
     install_path = os.path.join(LOCAL_SMB_PATH_TO_LIST_PKG, path, "Install")
