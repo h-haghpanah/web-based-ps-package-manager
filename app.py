@@ -8,12 +8,22 @@ from decouple import config
 
 PKG_STORE_WEB_IP_ADDRESS = config("PKG_STORE_WEB_IP_ADDRESS", cast=str)
 PKG_STORE_WEB_PORT = config("PKG_STORE_WEB_PORT", cast=str)
-LOCAL_IP_ADDRESS = config("LOCAL_IP_ADDRESS", cast=str)
-LOCAL_PORT = config("LOCAL_PORT", cast=str)
+LOCAL_IP_ADDRESS = config("LOCAL_IP_ADDRESS", cast=str, default="0.0.0.0")
+LOCAL_PORT = config("LOCAL_PORT", cast=str, default="80")
 LOCAL_SMB_PATH_TO_LIST_PKG = config("LOCAL_SMB_PATH_TO_LIST_PKG", cast=str)
 RAWG_API_KEY = config("RAWG_API_KEY", cast=str)
 PS_ADDRESSES = config("PS_ADDRESSES", cast=str)
-DEBUG = config("DEBUG", cast=bool)
+DEBUG = config("DEBUG", cast=bool, default=False)
+REPOSITORY = config("REPOSITORY", cast=str, default="mixed")
+if REPOSITORY.lower() == "ps4":
+    WEB_TITLE = "PS4 Package Sender"
+    WEB_LOGO = "logo-ps4.png"
+elif REPOSITORY.lower() == "ps5":
+    WEB_TITLE = "PS5 Package Sender"
+    WEB_LOGO = "logo-ps5.png"
+else:
+    WEB_TITLE = "PS Package Sender"
+    WEB_LOGO = "logo.png"
 ignore_list = ['.DS_Store']
 
 app = Flask(__name__)
@@ -27,7 +37,7 @@ def page_not_found(e):
 
 @app.route("/")
 def root():
-    return render_template("home.html")
+    return render_template("home.html", WEB_TITLE=WEB_TITLE, WEB_LOGO=WEB_LOGO)
 
 
 @app.route("/game_list")
@@ -119,7 +129,7 @@ def game(path):
         dlc_btn = True
     else:
         dlc_btn = False
-    return render_template("game.html", background_image=background_image, rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres, platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn, dlc_btn=dlc_btn, game_path=path)
+    return render_template("game.html", WEB_TITLE=WEB_TITLE, WEB_LOGO=WEB_LOGO, background_image=background_image, rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres, platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn, dlc_btn=dlc_btn, game_path=path)
 
 
 @app.route('/pkg_list/<path:path>', methods=['GET'])
