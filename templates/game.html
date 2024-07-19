@@ -30,13 +30,16 @@
       <aside class="sidebar-area">
           <div class="widget">
               <div class="widget-game-info">
-                  <h2 class="game-info-title">Download Now</h2>
+                  
 
                   <div class="game-rating-info">
                       <div class="rating-wrap"><span class="game-rating"><i class="fas fa-star"></i> {{rating}}</span> <span class="review-count">({{ratings_count}} Review)</span></div>
                       <div class="download-wrap">
                           <h5 class="download-wrap-title">{{metacritic}}</h5><span class="download-wrap-text">Metacritic</span></div>
                   </div>
+                  {% if install_btn or update_btn or dlc_btn %}
+                  <h2 class="game-info-title">Download Now</h2>
+                  {% endif %}
                     {% if install_btn %}
                     <button class="image_btn" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','Install')"><img class="download_images" src="/assets/images/install.png" alt="install"></button>
                     {% endif %}
