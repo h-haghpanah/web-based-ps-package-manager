@@ -9,6 +9,7 @@
     <meta name="keywords" content="Bame - Esports & Gaming HTML Template">
     <meta name="robots" content="INDEX,FOLLOW">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css">
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/images/favicons/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/images/favicons/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/favicons/apple-icon-72x72.png">
@@ -40,13 +41,14 @@
         <div class="sticky-wrapper">
             <div class="menu-area">
                 <div class="container">
-                    <div style="display: flex;justify-content: space-between;">
+                    <div style="display: flex;justify-content: space-between;align-items: center;">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-auto">
                             <div class="header-logo"><a href="index.html"><span data-mask-src="/assets/images/logo.png"></span> <img style="max-width: 200px;" src="/assets/images/logo.png" alt="Bame"></a></div>
                         </div>
                     </div>
-                    <div class="col-4 col-sm-4 col-lg-1 mt-2">
+                    <div class="col-6 col-sm-6 col-lg-2 mt-2">
+                        <span>Selected Playstation: </span>
                         <select name="ps_ip" class="form-control" id="ps_ip" onchange="update_ps_address()">
                 
                         </select>
@@ -75,6 +77,8 @@
     </div>
 
     <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/base.js"></script>
 </body>
 
 </html>
