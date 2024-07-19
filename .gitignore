@@ -162,6 +162,5 @@ cython_debug/
 #.idea/
 update.sh
 staticfiles/
-assets/game_info/*
 *.xml
 update.sh
