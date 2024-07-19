@@ -14,12 +14,15 @@
               <div class="game-title-wrap">
                   <h2 class="page-title text-white mb-0">{{name}}</h2>
               </div>
-              <p class="mb-30">Emerging trends in the esports industry include the growth of mobile esports, the integration of virtual reality in gaming experiences, and the increasing involvement of traditional sports organizations in esports partnerships
-                  and investments. Balancing screen time involves taking regular breaks, practicing the 20-20-20 rule (looking at something 20 feet away for 20 seconds every 20 minutes), and incorporating physical activity into daily routines.
-                  Establishing a balance between gaming and other activities is crucial for overall well-being.</p>
-              <p class="mb-30">Successful esports teams exhibit strong communication, strategic coordination, and individual player skills. Team chemistry, effective coaching, and adaptability to changing metas are also crucial factors. The rise of mobile
-                  gaming has significantly expanded the gaming audience, reaching a broader demographic.</p>
 
+              <div class="checklist list-two-column">
+                    <ul>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Genres:</span> {{genres}}</li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Platforms:</span> {{platforms}}</li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Released:</span> {{released}}</li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Updated:</span> {{updated}}</li>
+                    </ul>
+              </div>
           </div>
       </div>
   </div>
@@ -28,11 +31,11 @@
           <div class="widget">
               <div class="widget-game-info">
                   <h2 class="game-info-title">Download Now</h2>
-                  <div class="game-meta-list"><span>Mobile</span> <span>Action RPG</span> <span>PC</span></div>
+
                   <div class="game-rating-info">
-                      <div class="rating-wrap"><span class="game-rating"><i class="fas fa-star"></i> 4.8</span> <span class="review-count">(2.6k Review)</span></div>
+                      <div class="rating-wrap"><span class="game-rating"><i class="fas fa-star"></i> {{rating}}</span> <span class="review-count">({{ratings_count}} Review)</span></div>
                       <div class="download-wrap">
-                          <h5 class="download-wrap-title">10M+</h5><span class="download-wrap-text">Downloads</span></div>
+                          <h5 class="download-wrap-title">{{metacritic}}</h5><span class="download-wrap-text">Metacritic</span></div>
                   </div>
                   <div class="btn-wrap">
                     {% if install_btn %}

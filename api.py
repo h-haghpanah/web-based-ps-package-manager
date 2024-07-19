@@ -46,7 +46,6 @@ def rawg_search(api_key, query, xml_path):
             games = data.get('results', [])
 
             if games:
-                print(games[0])
                 most_similar_game = games[0]
                 root = ET.Element("game")
                 name = ET.SubElement(root, "name")
@@ -55,12 +54,26 @@ def rawg_search(api_key, query, xml_path):
                 rating.text = str(most_similar_game['rating'])
                 released = ET.SubElement(root, "released")
                 released.text = most_similar_game['released']
-                description = ET.SubElement(root, "description")
-                description.text = most_similar_game['description']
+                genres = ET.SubElement(root, "genres")
+                genre_names = [genre['name'] for genre in most_similar_game['genres']]
+                genres.text = ', '.join(genre_names)
+                platforms = ET.SubElement(root, "platforms")
+                platform_names = [platform['platform']['name'] for platform in most_similar_game['platforms']]
+                platforms.text = ', '.join(platform_names)
+                ratings_count = ET.SubElement(root, "ratings_count")
+                ratings_count.text = str(most_similar_game['ratings_count'])
+                released = ET.SubElement(root, "released")
+                released.text = most_similar_game['released']
+                updated = ET.SubElement(root, "updated")
+                updated.text = most_similar_game['updated']
+                metacritic = ET.SubElement(root, "metacritic")
+                metacritic.text = str(most_similar_game['metacritic'])
+                # description = ET.SubElement(root, "description")
+                # description.text = most_similar_game['description']
                 background_image = ET.SubElement(root, "background_image")
                 background_image.text = most_similar_game['background_image']
-                background_image_additional = ET.SubElement(root, "background_image_additional")
-                background_image_additional.text = most_similar_game['background_image_additional']
+                # background_image_additional = ET.SubElement(root, "background_image_additional")
+                # background_image_additional.text = most_similar_game['background_image_additional']
                 tree = ET.ElementTree(root)
                 tree.write(xml_path)
             else:

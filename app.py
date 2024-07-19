@@ -42,15 +42,34 @@ def game_list():
             if not os.path.exists(xml_path):
                 rawg_search(RAWG_API_KEY, item.replace("_", " "), xml_path)
                 name = item
+                genres = ""
+                platforms = ""
+                released = ""
+                updated = ""
+                rating = ""
+                ratings_count = ""
+                metacritic = ""
                 background_image = "assets/images/icons/pkg.png"
                 url = "game/"+item
             else:
                 tree = ET.parse(xml_path)
                 root = tree.getroot()
                 name = root.find("name").text
+                genres = root.find("genres").text
+                platforms = root.find("platforms").text
+                released = root.find("released").text
+                updated = root.find("updated").text
+                rating = root.find("rating").text
+                ratings_count = int(root.find("ratings_count").text)
+                if ratings_count >= 1000:
+                    ratings_count = round(ratings_count / 1000, 1)
+                    ratings_count = str(ratings_count) + "k"
+                else:
+                    ratings_count = str(ratings_count)
+                metacritic = root.find("metacritic").text
                 background_image = root.find("background_image").text
                 url = "game/"+item
-            all_games.append({"name": name, "background_image": background_image, "url": url})
+            all_games.append({"name": name, "background_image": background_image, "url": url, "genres": genres, "platforms": platforms, "released": released, "updated": updated, "rating": rating, "ratings_count": ratings_count, "metacritic": metacritic})
     return jsonify(all_games)
 
 
@@ -60,12 +79,29 @@ def game(path):
     if not os.path.exists(xml_path):
         name = path
         background_image = "assets/images/icons/pkg.png"
-        desc = "No desc"
+        genres = "Not specified!"
+        platforms = "Not specified!"
+        released = "Not specified!"
+        updated = "Not specified!"
+        rating = "Not specified!"
+        ratings_count = "Not specified!"
+        metacritic = "Not specified!"
     else:
         tree = ET.parse(xml_path)
         root = tree.getroot()
         name = root.find("name").text
-        desc = root.find("desc").text
+        genres = root.find("genres").text
+        platforms = root.find("platforms").text
+        released = root.find("released").text
+        updated = root.find("updated").text
+        rating = root.find("rating").text
+        ratings_count = int(root.find("ratings_count").text)
+        if ratings_count >= 1000:
+            ratings_count = round(ratings_count / 1000, 1)
+            ratings_count = str(ratings_count) + "k"
+        else:
+            ratings_count = str(ratings_count)
+        metacritic = root.find("metacritic").text
         background_image = root.find("background_image").text
     install_path = os.path.join(LOCAL_SMB_PATH_TO_LIST_PKG, path, "Install")
     if os.path.exists(install_path):
@@ -83,7 +119,7 @@ def game(path):
         dlc_btn = True
     else:
         dlc_btn = False
-    return render_template("game.html", background_image=background_image, name=name, install_btn=install_btn, update_btn=update_btn, dlc_btn=dlc_btn, game_path=path)
+    return render_template("game.html", background_image=background_image, rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres, platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn, dlc_btn=dlc_btn, game_path=path)
 
 
 @app.route('/pkg_list/<path:path>', methods=['GET'])
