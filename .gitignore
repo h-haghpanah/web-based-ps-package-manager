@@ -164,3 +164,4 @@ update.sh
 staticfiles/
 assets/game_info/*
 *.xml
+update.sh
