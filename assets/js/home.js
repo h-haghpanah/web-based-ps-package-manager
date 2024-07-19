@@ -17,7 +17,7 @@ function read_games(){
                 items += '<div class="col-lg-4 col-md-6 mb-20">\n'+
                 '<div class="game-card style2">\n'+
                 '<div class="game-card-img">\n'+
-                '<a href="'+response[i].url+'"><img style="max-height: 185px;" src="'+response[i].background_image+'" alt="game image"></a>\n'+
+                '<a href="'+response[i].url+'"><img style="max-height: 185px;max-width: fit-content;" src="'+response[i].background_image+'" alt="game image"></a>\n'+
                 '</div>\n'+
                 '<div class="game-card-details">\n'+
                 '<div class="media-left">\n'+
