@@ -23,6 +23,7 @@ import xml.etree.ElementTree as ET
 
 def package_sender(pkg_url, ps4_ip):
     # pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
+    print(pkg_url)
     ps4_api = f"http://{ps4_ip}:12800/api/install"
     pkg_url = quote(pkg_url)
     data = {
