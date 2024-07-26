@@ -164,3 +164,4 @@ update.sh
 staticfiles/
 *.xml
 update.sh
+local_pkg/

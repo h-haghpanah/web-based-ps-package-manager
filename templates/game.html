@@ -41,13 +41,13 @@
                   <h2 class="game-info-title">Download Now</h2>
                   {% endif %}
                     {% if install_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','Install')"><img class="download_images" src="/assets/images/install.png" alt="install"></button>
+                    <button class="image_btn" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','{{install_folder_name}}')"><img class="download_images" src="/assets/images/install.png" alt="install"></button>
                     {% endif %}
                     {% if update_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#updateModal" onclick="pkg_list('{{game_path}}','Update')"><img class="download_images" src="/assets/images/update.png" alt="update"></button>
+                    <button class="image_btn" data-toggle="modal" data-target="#updateModal" onclick="pkg_list('{{game_path}}','{{update_folder_name}}')"><img class="download_images" src="/assets/images/update.png" alt="update"></button>
                     {% endif %}
                     {% if dlc_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#dlcModal" onclick="pkg_list('{{game_path}}','DLC')"><img class="download_images" src="/assets/images/dlc.png" alt="dlc"></button>
+                    <button class="image_btn" data-toggle="modal" data-target="#dlcModal" onclick="pkg_list('{{game_path}}','{{dlc_folder_name}}')"><img class="download_images" src="/assets/images/dlc.png" alt="dlc"></button>
                     {% endif %}
 
               </div>

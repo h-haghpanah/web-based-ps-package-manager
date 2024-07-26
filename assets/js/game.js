@@ -19,11 +19,11 @@ function pkg_list(game_path,folder){
 
             }
             items += "</div>"
-            if(folder == "Install"){
+            if(folder.toLowerCase() == "install"){
                 $("#installModal_content").html(items)
-            }else if(folder == "Update"){
+            }else if(folder.toLowerCase() == "update"){
                 $("#updateModal_content").html(items)
-            }else if(folder == "DLC"){
+            }else if(folder.toLowerCase() == "dlc"){
                 $("#dlcModal_content").html(items)
             }
             

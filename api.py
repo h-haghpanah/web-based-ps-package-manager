@@ -5,8 +5,24 @@ import xml.etree.ElementTree as ET
 # import json
 
 
-def package_sender(pkg_name, web_ip, web_port, ps4_ip):
-    pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
+# def package_sender(pkg_name, web_ip, web_port, ps4_ip):
+#     pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
+#     ps4_api = f"http://{ps4_ip}:12800/api/install"
+#     pkg_url = quote(pkg_url)
+#     data = {
+#         "type": "direct",
+#         "packages": [pkg_url]
+#     }
+#     print(data)
+#     headers = {
+#         "Content-Type": "application/json"
+#     }
+#     response = requests.post(ps4_api, data=json.dumps(data), headers=headers)
+#     return json.loads(response.text)
+
+
+def package_sender(pkg_url, ps4_ip):
+    # pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
     ps4_api = f"http://{ps4_ip}:12800/api/install"
     pkg_url = quote(pkg_url)
     data = {
