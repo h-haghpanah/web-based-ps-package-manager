@@ -9,17 +9,18 @@ import json
 from tools import clean_url
 
 
-REMOTE_PKG_REPOSITORY_WEB_PROTOCOL = config("REMOTE_PKG_REPOSITORY_WEB_PROTOCOL", cast=str)
+REMOTE_PKG_REPOSITORY_WEB_PROTOCOL = config("REMOTE_PKG_REPOSITORY_WEB_PROTOCOL", cast=str, default="http")
 REMOTE_PKG_REPOSITORY_WEB_IP_ADDRESS = config("REMOTE_PKG_REPOSITORY_WEB_IP_ADDRESS", cast=str)
 REMOTE_PKG_REPOSITORY_WEB_PORT = config("REMOTE_PKG_REPOSITORY_WEB_PORT", cast=str)
 LOCAL_PKG = config("LOCAL_PKG", cast=bool)
 LOCAL_PKG_PATH = "local_pkg"
 if LOCAL_PKG_PATH[-1] == "/" or LOCAL_PKG_PATH[-1] == "\\":
     LOCAL_PKG_PATH = LOCAL_PKG_PATH[:-1]
-LOCAL_IP_ADDRESS = config("LOCAL_IP_ADDRESS", cast=str, default="0.0.0.0")
+LOCAL_IP_ADDRESS = config("LOCAL_IP_ADDRESS", cast=str)
 LOCAL_PORT = config("LOCAL_PORT", cast=str, default="80")
-RAWG_API_KEY = config("RAWG_API_KEY", cast=str)
+RAWG_API_KEY = config("RAWG_API_KEY", cast=str, default="")
 PS_ADDRESSES = config("PS_ADDRESSES", cast=str)
+CURRENT_SELECTED_PS_FILE_PATH = "selected_ps_ip.txt"
 DEBUG = config("DEBUG", cast=bool, default=False)
 REPOSITORY = config("REPOSITORY", cast=str, default="mixed")
 if REPOSITORY.lower() == "ps4":
@@ -190,7 +191,7 @@ def send_pkg(path):
         pkg_url = f"{REMOTE_PKG_REPOSITORY_WEB_PROTOCOL}://{REMOTE_PKG_REPOSITORY_WEB_IP_ADDRESS}:{REMOTE_PKG_REPOSITORY_WEB_PORT}/{path}"
     pkg_url = clean_url(pkg_url)
     try:
-        with open("ps_ip.txt", 'r') as file:
+        with open(CURRENT_SELECTED_PS_FILE_PATH, 'r') as file:
             ps_ip = file.read()
             file.close()
         response = package_sender(pkg_url, ps_ip)
@@ -200,6 +201,9 @@ def send_pkg(path):
         else:
             status = False
         return jsonify({"success": status})
+    except FileNotFoundError:
+        with open(CURRENT_SELECTED_PS_FILE_PATH, 'w') as file:
+            file.write('')
     except Exception as e:
         print(e)
         status = False
@@ -210,8 +214,7 @@ def send_pkg(path):
 def update_ps_address():
     try:
         ps_ip = request.form["ps_ip"]
-        ps_ip_file = 'ps_ip.txt'
-        with open(ps_ip_file, 'w') as file:
+        with open(CURRENT_SELECTED_PS_FILE_PATH, 'w') as file:
             file.write(ps_ip)
             file.close()
         return jsonify({"success": True})
@@ -224,7 +227,7 @@ def update_ps_address():
 def read_ps_addresses():
     try:
         addresses = []
-        with open("ps_ip.txt", 'r') as file:
+        with open(CURRENT_SELECTED_PS_FILE_PATH, 'r') as file:
             ps_ip = file.read()
             file.close()
         ps_addresses_array = PS_ADDRESSES.split("$")
@@ -241,11 +244,13 @@ def read_ps_addresses():
                     addresses.append({"name": item2[0], "address": item2[1], "selected": False})
                 else:
                     addresses.append({"name": item2[0], "address": item2[1], "selected": True})
-                    ps_ip_file = 'ps_ip.txt'
-                    with open(ps_ip_file, 'w') as file:
+                    with open(CURRENT_SELECTED_PS_FILE_PATH, 'w') as file:
                         file.write(item2[1])
                         file.close()
         return jsonify({"success": True, "addresses": addresses})
+    except FileNotFoundError:
+        with open(CURRENT_SELECTED_PS_FILE_PATH, 'w') as file:
+            file.write('')
     except Exception as e:
         print(e)
         return jsonify({"success": False})

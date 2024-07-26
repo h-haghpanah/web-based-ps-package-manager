@@ -2,6 +2,7 @@ import requests
 import json
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
+import os
 # import json
 
 
@@ -52,50 +53,66 @@ def task_status(task_id, ps4_ip):
 
 
 def rawg_search(api_key, query, xml_path):
-    base_url = 'https://api.rawg.io/api/'
-    endpoint = 'games'
-    params = {'key': api_key, 'search': query}
-    print(params)
-    try:
-        response = requests.get(f'{base_url}{endpoint}', params=params)
-        if response.status_code == 200:
-            data = response.json()
-            games = data.get('results', [])
+    game_info_path = os.path.dirname(xml_path)
+    if not os.path.exists(game_info_path):
+        os.mkdir(game_info_path)
+    if api_key is None or api_key == "":
+        name_find = query
+        rating_find = "-"
+        released_find = "-"
+        genres_find = ["-"]
+        platforms_find = ["-"]
+        ratings_count_find = "0"
+        updated_find = "-"
+        metacritic_find = "-"
+        background_image_find = "/assets/images/icons/pkg.png"
+    else:
+        base_url = 'https://api.rawg.io/api/'
+        endpoint = 'games'
+        params = {'key': api_key, 'search': query}
+        try:
+            response = requests.get(f'{base_url}{endpoint}', params=params)
+            if response.status_code == 200:
+                data = response.json()
+                games = data.get('results', [])
 
-            if games:
-                most_similar_game = games[0]
-                root = ET.Element("game")
-                name = ET.SubElement(root, "name")
-                name.text = most_similar_game['name']
-                rating = ET.SubElement(root, "rating")
-                rating.text = str(most_similar_game['rating'])
-                released = ET.SubElement(root, "released")
-                released.text = most_similar_game['released']
-                genres = ET.SubElement(root, "genres")
-                genre_names = [genre['name'] for genre in most_similar_game['genres']]
-                genres.text = ', '.join(genre_names)
-                platforms = ET.SubElement(root, "platforms")
-                platform_names = [platform['platform']['name'] for platform in most_similar_game['platforms']]
-                platforms.text = ', '.join(platform_names)
-                ratings_count = ET.SubElement(root, "ratings_count")
-                ratings_count.text = str(most_similar_game['ratings_count'])
-                released = ET.SubElement(root, "released")
-                released.text = most_similar_game['released']
-                updated = ET.SubElement(root, "updated")
-                updated.text = most_similar_game['updated']
-                metacritic = ET.SubElement(root, "metacritic")
-                metacritic.text = str(most_similar_game['metacritic'])
-                # description = ET.SubElement(root, "description")
-                # description.text = most_similar_game['description']
-                background_image = ET.SubElement(root, "background_image")
-                background_image.text = most_similar_game['background_image']
-                # background_image_additional = ET.SubElement(root, "background_image_additional")
-                # background_image_additional.text = most_similar_game['background_image_additional']
-                tree = ET.ElementTree(root)
-                tree.write(xml_path)
+                if games:
+                    most_similar_game = games[0]
+                    name_find = most_similar_game['name']
+                    rating_find = str(most_similar_game['rating'])
+                    released_find = most_similar_game['released']
+                    genres_find = [genre['name'] for genre in most_similar_game['genres']]
+                    platforms_find = [platform['platform']['name'] for platform in most_similar_game['platforms']]
+                    ratings_count_find = str(most_similar_game['ratings_count'])
+                    updated_find = most_similar_game['updated']
+                    metacritic_find = str(most_similar_game['metacritic'])
+                    background_image_find = most_similar_game['background_image']
+                else:
+                    print('No games found for the given search query.')
             else:
-                print('No games found for the given search query.')
-        else:
-            print(f'Error: {response.status_code}')
-    except Exception as e:
-        print(f'An error occurred: {str(e)}')
+                print(f'Error: {response.status_code}')
+        except Exception as e:
+            print(f'An error occurred: {str(e)}')
+    root = ET.Element("game")
+    name = ET.SubElement(root, "name")
+    name.text = name_find
+    rating = ET.SubElement(root, "rating")
+    rating.text = rating_find
+    released = ET.SubElement(root, "released")
+    released.text = released_find
+    genres = ET.SubElement(root, "genres")
+    genre_names = genres_find
+    genres.text = ', '.join(genre_names)
+    platforms = ET.SubElement(root, "platforms")
+    platform_names = platforms_find
+    platforms.text = ', '.join(platform_names)
+    ratings_count = ET.SubElement(root, "ratings_count")
+    ratings_count.text = ratings_count_find
+    updated = ET.SubElement(root, "updated")
+    updated.text = updated_find
+    metacritic = ET.SubElement(root, "metacritic")
+    metacritic.text = metacritic_find
+    background_image = ET.SubElement(root, "background_image")
+    background_image.text = background_image_find
+    tree = ET.ElementTree(root)
+    tree.write(xml_path)

@@ -163,5 +163,7 @@ cython_debug/
 update.sh
 staticfiles/
 *.xml
+game_info/
 update.sh
 local_pkg/
+selected_ps_ip.txt
