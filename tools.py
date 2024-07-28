@@ -1,5 +1,6 @@
 import requests
 import re
+import ast
 
 
 def get_dir_lists(url):
@@ -8,13 +9,18 @@ def get_dir_lists(url):
 
 
 def clean_url(url: str) -> str:
-    # Convert backslashes to forward slashes
     url = url.replace('\\', '/')
-
-    # Replace spaces with %20 (URL encoding for space)
     url = url.replace(' ', '%20')
-
-    # Remove extra slashes, but keep the "http://" or "https://" at the beginning
     url = re.sub(r'(?<!:)//+', '/', url)
-
     return url
+
+
+def parse_string_to_list(string):
+    try:
+        parsed_value = ast.literal_eval(string)
+        if not isinstance(parsed_value, list):
+            return []
+        return parsed_value
+    except (ValueError, SyntaxError) as e:
+        print(e)
+        return []

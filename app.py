@@ -6,7 +6,7 @@ from api import rawg_search, package_sender
 import xml.etree.ElementTree as ET
 from decouple import config
 import json
-from tools import clean_url
+from tools import clean_url, parse_string_to_list
 
 
 REMOTE_PKG_REPOSITORY_WEB_PROTOCOL = config("REMOTE_PKG_REPOSITORY_WEB_PROTOCOL", cast=str, default="http")
@@ -34,7 +34,8 @@ elif REPOSITORY.lower() == "ps5":
 else:
     WEB_TITLE = "PS Package Sender"
     WEB_LOGO = "logo.png"
-ignore_list = ['.DS_Store']
+IGNORE_LIST = config("IGNORE_LIST", cast=str, default="[]")
+IGNORE_LIST = parse_string_to_list(IGNORE_LIST)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mywebKey"
@@ -61,6 +62,8 @@ def game_list():
     all_games = []
     for item in games:
         if LOCAL_PKG and not os.path.isdir(os.path.join(LOCAL_PKG_PATH, item)):
+            continue
+        if item in IGNORE_LIST:
             continue
         game_folder.append(item)
         xml_path = os.path.join("assets/game_info", item+".xml")
