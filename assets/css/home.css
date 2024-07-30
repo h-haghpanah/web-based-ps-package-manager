@@ -63,3 +63,16 @@ body{background-color: black;}
     max-height: 162px; /* Adjust the maximum height as needed */
     width: auto;
   }
+
+  .loading {
+    margin: auto;
+  }
+
+  .text_center{
+    justify-content: center;
+    display: flex;
+  }
+
+  .display_none {
+    display: none;
+  }

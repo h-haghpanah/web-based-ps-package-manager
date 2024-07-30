@@ -1,6 +1,7 @@
 
 read_games()
 function read_games(){
+    
     $.ajax({
         url:"/game_list",
         method:"GET",
@@ -30,6 +31,8 @@ function read_games(){
 
             }
             }
+            $("#game_list_title").removeClass("display_none")
+            $("#game_loading").addClass("display_none")
             $("#game_list").html(items)
         }
     })
