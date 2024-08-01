@@ -76,3 +76,7 @@ body{background-color: black;}
   .display_none {
     display: none;
   }
+
+  .game-card-container {
+    display: block;
+}

@@ -15,7 +15,7 @@ function read_games(){
                 }
                 else{
 
-                items += '<div class="col-lg-4 col-md-6 mb-20">\n'+
+                items += '<div class="col-lg-4 col-md-6 mb-20 game-card-container">\n'+
                 '<div class="game-card style2">\n'+
                 '<div class="game-card-img">\n'+
                 '<a href="'+response[i].url+'"><img style="max-height: 185px;max-width: fit-content;" src="'+response[i].background_image+'" alt="game image"></a>\n'+
@@ -38,3 +38,16 @@ function read_games(){
     })
  }
 
+ function filterGames() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const gameContainers = document.querySelectorAll('.game-card-container');
+
+    gameContainers.forEach(container => {
+        const title = container.querySelector('.box-title').textContent.toLowerCase();
+        if (title.includes(searchInput)) {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    });
+}
