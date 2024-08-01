@@ -2,7 +2,7 @@
 from flask import Flask, render_template, send_from_directory, jsonify, request
 import requests
 import os
-from api import rawg_search, package_sender
+from api import rawg_search, package_sender, update_xml_file
 import xml.etree.ElementTree as ET
 from decouple import config
 import json
@@ -97,7 +97,7 @@ def game_list():
                     ratings_count = str(ratings_count)
             except Exception as e:
                 print(e)
-                ratings_count = "Not specified!"
+                ratings_count = "Not specified"
             metacritic = root.find("metacritic").text
             background_image = root.find("background_image").text
             url = "game/"+item
@@ -111,13 +111,14 @@ def game(path):
     if not os.path.exists(xml_path):
         name = path
         background_image = "assets/images/icons/pkg.png"
-        genres = "Not specified!"
-        platforms = "Not specified!"
-        released = "Not specified!"
-        updated = "Not specified!"
-        rating = "Not specified!"
-        ratings_count = "Not specified!"
-        metacritic = "Not specified!"
+        genres = "Not specified"
+        platforms = "Not specified"
+        released = "Not specified"
+        updated = "Not specified"
+        rating = "Not specified"
+        ratings_count = "Not specified"
+        metacritic = "Not specified"
+        description = ""
     else:
         tree = ET.parse(xml_path)
         root = tree.getroot()
@@ -127,6 +128,7 @@ def game(path):
         released = root.find("released").text
         updated = root.find("updated").text
         rating = root.find("rating").text
+        description = root.find("description").text
         try:
             ratings_count = int(root.find("ratings_count").text)
             if ratings_count >= 1000:
@@ -136,7 +138,7 @@ def game(path):
                 ratings_count = str(ratings_count)
         except Exception as e:
             print(e)
-            ratings_count = "Not specified!"
+            ratings_count = "Not specified"
         metacritic = root.find("metacritic").text
         background_image = root.find("background_image").text
     if LOCAL_PKG:
@@ -162,7 +164,11 @@ def game(path):
             dlc_folder_name = key
             dlc_btn = True
 
-    return render_template("game.html", WEB_TITLE=WEB_TITLE, WEB_LOGO=WEB_LOGO, background_image=background_image, rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres, platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn, dlc_btn=dlc_btn, game_path=path, install_folder_name=install_folder_name, update_folder_name=update_folder_name, dlc_folder_name=dlc_folder_name)
+    return render_template("game.html", WEB_TITLE=WEB_TITLE, WEB_LOGO=WEB_LOGO, background_image=background_image,
+                           rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres,
+                           platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn,
+                           dlc_btn=dlc_btn, game_path=path, install_folder_name=install_folder_name, update_folder_name=update_folder_name,
+                           dlc_folder_name=dlc_folder_name, description=description)
 
 
 @app.route('/pkg_list/<path:path>', methods=['GET'])
@@ -186,6 +192,42 @@ def pkg_list(path):
             for pkg in pkgs:
                 links.append({"pkg": pkg, "path": path})
     return jsonify(links)
+
+
+@app.route('/submit_game_info', methods=['POST'])
+def submit_game_info():
+    title = request.form.get("title")
+    genres = request.form.get("genres")
+    platforms = request.form.get("platforms")
+    released = request.form.get("released")
+    image = request.form.get("image")
+    description = request.form.get("description")
+    rating = request.form.get("rating")
+    try:
+        rating = float(rating)
+    except Exception as e:
+        print(e)
+        rating = "None"
+    ratings_count = request.form.get("ratings_count")
+    try:
+        ratings_count = int(ratings_count)
+    except Exception as e:
+        print(e)
+        ratings_count = "Not specified"
+    updated = request.form.get("updated")
+    metacritic = request.form.get("metacritic")
+    game_xml_name = request.form.get("game_xml_name")
+    xml_path = f"assets/game_info/{game_xml_name}"
+    try:
+        update_xml_file(xml_path_update=xml_path, title_update=title, genres_update=genres, platforms_update=platforms,
+                        released_update=released, image_update=image, description_update=description, rating_update=rating,
+                        ratings_count_update=ratings_count, updated_update=updated, metacritic_update=metacritic)
+        response = {"status": True, "data": {"rating": rating, "ratings_count": ratings_count}}
+        return jsonify(response)
+    except Exception as e:
+        print(e)
+        response = {"status": False, "error": str(e)}
+        return jsonify(response)
 
 
 @app.route('/send_pkg/<path:path>', methods=['GET'])

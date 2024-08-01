@@ -114,5 +114,36 @@ def rawg_search(api_key, query, xml_path):
     metacritic.text = metacritic_find
     background_image = ET.SubElement(root, "background_image")
     background_image.text = background_image_find
+    description = ET.SubElement(root, "description")
+    description.text = ""
     tree = ET.ElementTree(root)
     tree.write(xml_path)
+
+
+def update_xml_file(xml_path_update, title_update, genres_update, platforms_update, released_update, image_update, description_update, rating_update, ratings_count_update, updated_update, metacritic_update):
+    game_info_path = os.path.dirname(xml_path_update)
+    if not os.path.exists(game_info_path):
+        os.mkdir(game_info_path)
+    root = ET.Element("game")
+    name = ET.SubElement(root, "name")
+    name.text = title_update
+    rating = ET.SubElement(root, "rating")
+    rating.text = str(rating_update)
+    released = ET.SubElement(root, "released")
+    released.text = released_update
+    genres = ET.SubElement(root, "genres")
+    genres.text = genres_update
+    platforms = ET.SubElement(root, "platforms")
+    platforms.text = platforms_update
+    ratings_count = ET.SubElement(root, "ratings_count")
+    ratings_count.text = str(ratings_count_update)
+    updated = ET.SubElement(root, "updated")
+    updated.text = updated_update
+    metacritic = ET.SubElement(root, "metacritic")
+    metacritic.text = metacritic_update
+    background_image = ET.SubElement(root, "background_image")
+    background_image.text = image_update
+    description = ET.SubElement(root, "description")
+    description.text = description_update
+    tree = ET.ElementTree(root)
+    tree.write(xml_path_update)

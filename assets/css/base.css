@@ -1,0 +1,23 @@
+.modal-medium{
+    max-width: 768px;
+}
+
+.card-bg-dark{
+    background-color: #000 !important;
+}
+
+.h-white{
+    color: white;
+}
+
+.modal-submit{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem;
+}
+
+.fa-star{
+    color: #d9d900 !important;
+}

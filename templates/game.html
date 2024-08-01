@@ -9,18 +9,18 @@
 <div class="row gx-40 mt-30">
   <div class="col-xxl-8 col-lg-7">
       <div class="page-single game-details-wrap">
-          <div class="page-img mb-50"><img class="w-100" src="{{background_image}}" alt="img"></div>
+          <div class="page-img mb-50"><img class="w-100" id="game_background_image" src="{{background_image}}" alt="img"></div>
           <div class="page-content">
               <div class="game-title-wrap">
-                  <h2 class="page-title text-white mb-0">{{name}}</h2>
+                  <h2 class="page-title text-white mb-0" id="game_background_name">{{name}}</h2>
               </div>
-
+              <p id="game_description">{{description}}</p>
               <div class="checklist list-two-column">
                     <ul>
-                        <li><i class="far fa-shield-check"></i><span class="text-white">Genres:</span> {{genres}}</li>
-                        <li><i class="far fa-shield-check"></i><span class="text-white">Platforms:</span> {{platforms}}</li>
-                        <li><i class="far fa-shield-check"></i><span class="text-white">Released:</span> {{released}}</li>
-                        <li><i class="far fa-shield-check"></i><span class="text-white">Updated:</span> {{updated}}</li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Genres:</span> <span id="game_genres">{{genres}}</span></li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Platforms:</span> <span id="game_platforms">{{platforms}}</span></li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Released:</span> <span id="game_released">{{released}}</span></li>
+                        <li><i class="far fa-shield-check"></i><span class="text-white">Updated:</span> <span id="game_updated">{{updated}}</span></li>
                     </ul>
               </div>
           </div>
@@ -29,27 +29,31 @@
   <div class="col-xxl-4 col-lg-5">
       <aside class="sidebar-area">
           <div class="widget">
+            <div class="widget-game-info">
+              
+            </div>
               <div class="widget-game-info">
-                  
-
                   <div class="game-rating-info">
-                      <div class="rating-wrap"><span class="game-rating"><i class="fas fa-star"></i> {{rating}}</span> <span class="review-count">({{ratings_count}} Review)</span></div>
-                      <div class="download-wrap">
-                          <h5 class="download-wrap-title">{{metacritic}}</h5><span class="download-wrap-text">Metacritic</span></div>
+                      <div class="rating-wrap"><span class="game-rating"><i class="fas fa-star"></i><span id="game_rating" class="ml-10">{{rating}}</span></span> <span class="review-count">(<span id="game_ratings_count">{{ratings_count}}</span> Review)</span></div>
+                      <div class= "download-wrap">
+                          <h5 class="download-wrap-title" id="game_metacritic">{{metacritic}}</h5><span class="download-wrap-text">Metacritic</span></div>
                   </div>
                   {% if install_btn or update_btn or dlc_btn %}
                   <h2 class="game-info-title">Download Now</h2>
                   {% endif %}
-                    {% if install_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','{{install_folder_name}}')"><img class="download_images" src="/assets/images/install.png" alt="install"></button>
-                    {% endif %}
-                    {% if update_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#updateModal" onclick="pkg_list('{{game_path}}','{{update_folder_name}}')"><img class="download_images" src="/assets/images/update.png" alt="update"></button>
-                    {% endif %}
-                    {% if dlc_btn %}
-                    <button class="image_btn" data-toggle="modal" data-target="#dlcModal" onclick="pkg_list('{{game_path}}','{{dlc_folder_name}}')"><img class="download_images" src="/assets/images/dlc.png" alt="dlc"></button>
-                    {% endif %}
-
+                  {% if install_btn %}
+                  <button class="btn btn-dark bgc-black" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','{{install_folder_name}}')">Install</button>
+                  {% endif %}
+                  {% if update_btn %}
+                  <button class="btn btn-dark bgc-black" data-toggle="modal" data-target="#updateModal" onclick="pkg_list('{{game_path}}','{{update_folder_name}}')">Update</button>
+                  {% endif %}
+                  {% if dlc_btn %}
+                  <button class="btn btn-dark bgc-black" data-toggle="modal" data-target="#dlcModal" onclick="pkg_list('{{game_path}}','{{dlc_folder_name}}')">DLC</button>
+                  {% endif %}
+                  <hr class="bg-dark border-2 border-top border-dark border-black">
+                  <div>
+                    <button class="btn btn-dark bgc-black" data-toggle="modal" data-target="#editModal" >Edit Game Info</button>
+                  </div>
               </div>
           </div>
       </aside>
@@ -112,5 +116,105 @@
     </div>
   </div>
     
+  <!-- Edit Modal -->
+  <div class="modal" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-medium" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">DLC</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="editModal_content">
+          <div class="">
+            <div class="col-lg-12 col-md-12">
+              <div class="card custom-card card-bg-dark">
+                <div class="card-body">
+                  <div>
+                    <h6 class="main-content-label mb-1 h-white">Edit Game From</h6>
+                  </div>
+                  <div class="row row-sm">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Game Title</p>
+                        <input type="text" class="form-control" name="title" id="modal_game_title" value="{{name}}">
+                      </div>
+                    </div>
 
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Genres</p>
+                        <input type="text" class="form-control" name="genres" id="modal_game_genres" value="{{genres}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Platforms</p>
+                        <input type="text" class="form-control" name="platforms" id="modal_game_platforms" value="{{platforms}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Released</p>
+                        <input type="text" class="form-control" name="released" id="modal_game_released" value="{{released}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Updated</p>
+                        <input type="text" class="form-control" name="updated" id="modal_game_updated" value="{{updated}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Rating</p>
+                        <input type="text" class="form-control" name="rating" id="modal_game_rating" value="{{rating}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Ratings Count</p>
+                        <input type="text" class="form-control" name="ratings_count" id="modal_game_ratings_count" value="{{ratings_count}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p class="mg-b-10">Metacritic</p>
+                        <input type="text" class="form-control" name="metacritic" id="modal_game_metacritic" value="{{metacritic}}">
+                      </div>
+                    </div> 
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <p class="mg-b-10">Image</p>
+                        <input type="text" class="form-control" name="image" id="modal_game_image" value="{{background_image}}">
+                      </div>
+                    </div> 
+
+                    <div class="col-md-12 ">
+                      <div class="form-group mb-0">
+                        <p class="mg-b-10">Description</p>
+                        <textarea class="form-control" name="description" id="modal_game_description" rows="3"></textarea>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="modal-submit">
+                    <button class="btn btn-secondary" onclick="submit_game_info()">Submit</button>
+                    <button type="button" class="btn btn-warning"><i class="bi bi-arrow-counterclockwise mr-10"></i>Reload Info From RAWG API</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
