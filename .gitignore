@@ -167,3 +167,4 @@ game_info/
 update.sh
 local_pkg/
 selected_ps_ip.txt
+*.pkg

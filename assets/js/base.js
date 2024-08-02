@@ -66,3 +66,28 @@ function update_ps_address(){
       title: msg
     })
   }
+  local_pkg_switch()
+  function local_pkg_switch(){
+    var isChecked = $("#local_pkg_switch").is(':checked');
+    if (isChecked){
+        $("#remote_repo_input_div").addClass("display_none")
+        $("#local_repo_input_div").removeClass("display_none")
+    }else{
+        $("#local_repo_input_div").addClass("display_none")
+        $("#remote_repo_input_div").removeClass("display_none")
+    }
+    // $.ajax({
+    //     url:"/submit_game_info",
+    //     method:"POST",
+    //     data:{
+    //         command:command,
+    //         value:value},
+    //     success:function(response){
+    //         if(response.status){
+    //             showsuccess("Game Info Successfuly Changed!")
+    //         }else{
+    //             showerror("Something Wrong.")
+    //         }
+    //     }
+    // })
+  }
