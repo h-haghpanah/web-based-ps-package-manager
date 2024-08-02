@@ -95,3 +95,11 @@
 	top: 2px;
     color: #fff;
 }
+
+.disabled_background_dark_red{
+    background: #250000 !important;
+}
+
+.form-check-label{
+    color: #fff !important;
+}

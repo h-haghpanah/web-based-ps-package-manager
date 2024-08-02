@@ -76,18 +76,22 @@ function update_ps_address(){
         $("#local_repo_input_div").addClass("display_none")
         $("#remote_repo_input_div").removeClass("display_none")
     }
-    // $.ajax({
-    //     url:"/submit_game_info",
-    //     method:"POST",
-    //     data:{
-    //         command:command,
-    //         value:value},
-    //     success:function(response){
-    //         if(response.status){
-    //             showsuccess("Game Info Successfuly Changed!")
-    //         }else{
-    //             showerror("Something Wrong.")
-    //         }
-    //     }
-    // })
   }
+  rawg_api_switch()
+  function rawg_api_switch() {
+    var isChecked = $("#rawg_api_switch").is(':checked');
+    if (isChecked){
+        $("#rawg_api_switch_input").prop("disabled", false).attr("placeholder", "Ex: fdsferc54fdsf45a3745643agdd55f").removeClass("disabled_background_dark_red");
+    } else {
+        $("#rawg_api_switch_input").prop("disabled", true).attr("placeholder", "Disabled").addClass("disabled_background_dark_red");
+    }
+}
+
+function submit_config() {
+    var isChecked = $("#rawg_api_switch").is(':checked');
+    if (isChecked){
+        $("#rawg_api_switch_input").prop("disabled", false).attr("placeholder", "Ex: fdsferc54fdsf45a3745643agdd55f").removeClass("disabled_background_dark_red");
+    } else {
+        $("#rawg_api_switch_input").prop("disabled", true).attr("placeholder", "Disabled").addClass("disabled_background_dark_red");
+    }
+}

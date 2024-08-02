@@ -7,6 +7,39 @@ import xml.etree.ElementTree as ET
 from decouple import config
 import json
 from tools import clean_url, parse_string_to_list
+import configparser
+
+
+dirname = os.path.dirname(__file__)
+CONFIG = configparser.RawConfigParser()
+config_file = "./config.ini"
+default_config = """
+[local_operating_system]
+IP_ADDRESS=
+
+[local_webserver]
+IP_ADDRESS=0.0.0.0
+LOCAL_PORT=85
+
+[remote_web_server]
+ADDRESS=
+
+[general]
+IGNORE_LIST=['.DS_Store', '.streams']
+
+[rawg]
+RAWG_API_KEY=
+DEBUG=False
+REPOSITORY_TYPE=ps4
+WEB_TITLE=PS4 PKG Sender
+LOGO=PS4
+"""
+if not os.path.isfile(config_file):
+    with open(config_file, 'w') as file:
+        file.write(default_config)
+config_path = os.path.join(dirname, config_file)
+CONFIG.read(config_path)
+# msg_from_id = config.get("telegram", "msg_from_id")
 
 
 REMOTE_PKG_REPOSITORY_WEB_PROTOCOL = config("REMOTE_PKG_REPOSITORY_WEB_PROTOCOL", cast=str, default="http")

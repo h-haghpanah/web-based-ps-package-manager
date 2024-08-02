@@ -168,3 +168,4 @@ update.sh
 local_pkg/
 selected_ps_ip.txt
 *.pkg
+config.ini

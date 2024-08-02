@@ -101,83 +101,62 @@
                                 <div class="col-md-6"  id="remote_repo_input_div">
                                     <div class="form-group">
                                         <p class="mg-b-10">Remote Repository Web Address</p>
-                                        <input type="text" class="form-control" name="title" id="modal_game_title" value="{{name}}" placeholder="Ex: http://192.168.1.10:8080">
+                                        <input type="text" class="form-control" name="title" id="modal_game_title" placeholder="Ex: http://192.168.1.10:8080">
                                     </div>
                                 </div>
+
+                                <div class="col-md-6 display_flex_center">
+                                    <label class="toggle display_flex" onchange="rawg_api_switch()">
+                                        <input class="toggle-checkbox" id="rawg_api_switch" type="checkbox">
+                                        <div class="toggle-switch" on></div>
+                                        <span class="toggle-label">RAWG API</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-6" id="rawg_api_switch_div">
+                                    <div class="form-group">
+                                        <p class="mg-b-10">RAWG API Key</p>
+                                        <input type="text" class="" name="title" id="rawg_api_switch_input" placeholder="Ex: fdsferc54fdsf45a3745643agdd55f">
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <p class="mg-b-10">Game Title</p>
-                                        <input type="text" class="form-control" name="title" id="modal_game_title" value="{{name}}">
+                                        <p class="mg-b-10">Repository Type</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps4" value="ps4">
+                                            <label class="form-check-label" for="repo_type_ps4">PS4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps5" value="ps5">
+                                            <label class="form-check-label" for="repo_type_ps5">PS5</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_mixed" value="mixed">
+                                            <label class="form-check-label" for="repo_type_mixed">Mixed</label>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Genres</p>
-                                    <input type="text" class="form-control" name="genres" id="modal_game_genres" value="{{genres}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Platforms</p>
-                                    <input type="text" class="form-control" name="platforms" id="modal_game_platforms" value="{{platforms}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Released</p>
-                                    <input type="text" class="form-control" name="released" id="modal_game_released" value="{{released}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Updated</p>
-                                    <input type="text" class="form-control" name="updated" id="modal_game_updated" value="{{updated}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Rating</p>
-                                    <input type="text" class="form-control" name="rating" id="modal_game_rating" value="{{rating}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Ratings Count</p>
-                                    <input type="text" class="form-control" name="ratings_count" id="modal_game_ratings_count" value="{{ratings_count}}">
-                                </div>
-                                </div> 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Metacritic</p>
-                                    <input type="text" class="form-control" name="metacritic" id="modal_game_metacritic" value="{{metacritic}}">
-                                </div>
-                                </div> 
-                                <div class="col-md-12">
-                                <div class="form-group">
-                                    <p class="mg-b-10">Image</p>
-                                    <input type="text" class="form-control" name="image" id="modal_game_image" value="{{background_image}}">
-                                </div>
+                                    <div class="form-group">
+                                        <p class="mg-b-10">Website Title</p>
+                                        <input type="text" class="form-control" name="" id="" placeholder="Ex: PS4 PKG Sender">
+                                    </div>
                                 </div> 
 
                                 <div class="col-md-12 ">
-                                <div class="form-group mb-0">
-                                    <p class="mg-b-10">Description</p>
-                                    <textarea class="form-control" name="description" id="modal_game_description" rows="3"></textarea>
-                                </div>
+                                    <div class="form-group mb-0">
+                                        <p class="mg-b-10">PS IP Addresses</p>
+                                        <span class="text-muted small">Enter each PS address on a separate line in the format: Name=PS_IP_Address (e.g., Hesam=192.168.1.20).</span>
+                                        
+                                        <textarea class="form-control" name="description" id="modal_game_description" rows="3"></textarea>
+                                    </div>
                                 </div>
 
                             </div>
                             </div>
                             <div class="modal-submit">
-                                <button class="btn btn-secondary" onclick="submit_game_info()">Submit</button>
-                                <button type="button" class="btn btn-warning"><i class="bi bi-arrow-counterclockwise mr-10"></i>Reload Info From RAWG API</button>
+                                <button class="btn btn-secondary" onclick="submit_config()">Submit</button>
                             </div>
                         </div>
                         </div>
