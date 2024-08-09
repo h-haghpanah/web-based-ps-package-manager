@@ -11,12 +11,12 @@ Welcome to the PlayStation Package Manager! This web-based application allows yo
 - **Package Types:** Organize game packages into Install, Update, and DLC categories for each game.
 
 ## Installation
-Follow these steps to install and run the PlayStation Package Sender:
+Follow these steps to install and run the PlayStation Package Manager:
 
 1. **Clone the Repository:**
    ```bash
-   git clone [repository link]  # Replace with your actual repository link
-   cd [repository folder]       # Replace with the cloned repository folder name
+   git clone https://github.com/h-haghpanah/web-based-ps-package-manager.git
+   cd web-based-ps-package-manager
    ```
 2. **Install Requirements:**
    Make sure you have Python installed. Then, install the required dependencies by running:
