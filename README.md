@@ -29,10 +29,8 @@ Follow these steps to install and run the PlayStation Package Manager:
    python app.py
    ```
 4. **Access the Application:**
-   Start the application by running:
-   ```bash
-   python app.py
-   ```
+   Open your web browser and go to http://localhost:85 (or the port you have configured in config.ini).
+
 ## Initial Configuration
 To set up the PlayStation Package Sender, follow these steps:
 
