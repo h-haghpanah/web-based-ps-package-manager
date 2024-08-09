@@ -45,7 +45,7 @@ To fetch game metadata using the RAWG API:
 ## About Me
 Hi, I'm **Hesam Haghpanah**, a Python developer and a fan of video games. I developed this project to provide an easier way to manage and send PlayStation packages from a web-based platform. If you'd like to check out the code or contribute, you can find the repository at:
 
-[Repository Link](#) <!-- Replace with your actual repository link -->
+[Repository Link](https://github.com/h-haghpanah/web-based-ps-package-manager.git)
 
 If you have any questions or suggestions, feel free to reach out to me at: [h.haghpanah@outlook.com](mailto:h.haghpanah@outlook.com).
 
