@@ -10,6 +10,9 @@ Welcome to the PlayStation Package Manager! This web-based application allows yo
 - **PlayStation Management:** Define and manage multiple PlayStation consoles, choosing which to send packages to.
 - **Package Types:** Organize game packages into Install, Update, and DLC categories for each game.
 
+## Installation
+Follow these steps to install and run the PlayStation Package Sender:
+
 1. **Clone the Repository:**
    ```bash
    git clone [repository link]  # Replace with your actual repository link
