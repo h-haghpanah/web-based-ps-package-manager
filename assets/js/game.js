@@ -98,4 +98,84 @@ function submit_game_info(){
     })
 }
 
+function reload_rawg_game_info_alert(){
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success me-2', // Add me-2 class to add margin
+            cancelButton: 'btn btn-danger ms-2' // Add ms-2 class to add margin
+        },
+        buttonsStyling: false,
+        background: '#2a2a2a', // Dark background for dark theme
+        color: '#ffffff' // White text color for dark theme
+    });
+    
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You are about to reload game info from the RAWG API. Please confirm your choice.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Reload',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        html: `
+        <div class="alert_input">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="reloadOption" id="reloadOption1" value="withTitle" checked>
+                <label class="form-check-label font-size-12" for="reloadOption1">
+                    Reload with input title
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="reloadOption" id="reloadOption2" value="withDirectory">
+                <label class="form-check-label font-size-12" for="reloadOption2">
+                    Reload with game directory
+                </label>
+            </div>
+        </div>
+        `,
+        preConfirm: () => {
+            const selectedOption = document.querySelector('input[name="reloadOption"]:checked');
+            if (selectedOption) {
+                return selectedOption.value;
+            } else {
+                Swal.showValidationMessage('You need to choose how to reload the game info');
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            reload_rawg_game_info(result.value);
+            swalWithBootstrapButtons.fire(
+                'Reload Submitted!',
+                'The game info reload has been successfully submitted!',
+                'success'
+            );
+        }
+    });
+}
 
+
+
+
+function reload_rawg_game_info(reload_option){
+    title = $("#modal_game_title").val()
+    description = $("#modal_game_description").val()
+    pathname = window.location.pathname;
+    segments = pathname.split('/');
+    directory_name = segments.pop();
+    $.ajax({
+        url:"/reload_rawg_game_info",
+        method:"POST",
+        data:{
+            reload_option:reload_option,
+            title:title,
+            description:description,
+            directory_name:directory_name},
+        success:function(response){
+            if(response.status){
+
+            }else{
+                showerror(response.error)
+            }
+        }
+    })
+}

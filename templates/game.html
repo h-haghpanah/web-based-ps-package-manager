@@ -200,7 +200,7 @@
                     <div class="col-md-12 ">
                       <div class="form-group mb-0">
                         <p class="mg-b-10">Description</p>
-                        <textarea class="form-control" name="description" id="modal_game_description" rows="3"></textarea>
+                        <textarea class="form-control" name="description" id="modal_game_description" rows="3">{{description}}</textarea>
                       </div>
                     </div>
 
@@ -208,7 +208,7 @@
                 </div>
                 <div class="modal-submit">
                     <button class="btn btn-secondary" onclick="submit_game_info()">Submit</button>
-                    <button type="button" class="btn btn-warning"><i class="bi bi-arrow-counterclockwise mr-10"></i>Reload Info From RAWG API</button>
+                    <button type="button" class="btn btn-warning" onclick="reload_rawg_game_info_alert()" {{rawg_ap_reload_btn_status}}><i class="bi bi-arrow-counterclockwise mr-10"></i>Reload RAWG API</button>
                 </div>
               </div>
             </div>

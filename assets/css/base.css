@@ -103,3 +103,26 @@
 .form-check-label{
     color: #fff !important;
 }
+
+.alert_input {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+}
+
+.font-size-12{
+	font-size: 12px !important;
+}
+
+.display_none {
+    display: none;
+  }
+
+.header_btn{
+	height: 40px !important;
+	padding: 10 10 10 10 !important;
+}
+select {
+    background: rgb(11, 14, 19) !important; /* Removes background including the arrow */
+}

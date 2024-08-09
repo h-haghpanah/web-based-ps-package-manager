@@ -52,20 +52,14 @@ def task_status(task_id, ps4_ip):
     print(response.text)
 
 
-def rawg_search(api_key, query, xml_path):
+def rawg_search(api_key, query, xml_path, desc=None):
     game_info_path = os.path.dirname(xml_path)
     if not os.path.exists(game_info_path):
         os.mkdir(game_info_path)
+    default_xml = False
+    error = None
     if api_key is None or api_key == "":
-        name_find = query
-        rating_find = "-"
-        released_find = "-"
-        genres_find = ["-"]
-        platforms_find = ["-"]
-        ratings_count_find = "0"
-        updated_find = "-"
-        metacritic_find = "-"
-        background_image_find = "/assets/images/icons/pkg.png"
+        default_xml = True
     else:
         base_url = 'https://api.rawg.io/api/'
         endpoint = 'games'
@@ -88,36 +82,53 @@ def rawg_search(api_key, query, xml_path):
                     metacritic_find = str(most_similar_game['metacritic'])
                     background_image_find = most_similar_game['background_image']
                 else:
-                    print('No games found for the given search query.')
+                    default_xml = True
             else:
-                print(f'Error: {response.status_code}')
+                error = response.text
+                default_xml = True
         except Exception as e:
-            print(f'An error occurred: {str(e)}')
-    root = ET.Element("game")
-    name = ET.SubElement(root, "name")
-    name.text = name_find
-    rating = ET.SubElement(root, "rating")
-    rating.text = rating_find
-    released = ET.SubElement(root, "released")
-    released.text = released_find
-    genres = ET.SubElement(root, "genres")
-    genre_names = genres_find
-    genres.text = ', '.join(genre_names)
-    platforms = ET.SubElement(root, "platforms")
-    platform_names = platforms_find
-    platforms.text = ', '.join(platform_names)
-    ratings_count = ET.SubElement(root, "ratings_count")
-    ratings_count.text = ratings_count_find
-    updated = ET.SubElement(root, "updated")
-    updated.text = updated_find
-    metacritic = ET.SubElement(root, "metacritic")
-    metacritic.text = metacritic_find
-    background_image = ET.SubElement(root, "background_image")
-    background_image.text = background_image_find
-    description = ET.SubElement(root, "description")
-    description.text = ""
-    tree = ET.ElementTree(root)
-    tree.write(xml_path)
+            error = f'An error occurred: {str(e)}'
+    if default_xml:
+        name_find = query
+        rating_find = "-"
+        released_find = "-"
+        genres_find = ["-"]
+        platforms_find = ["-"]
+        ratings_count_find = "0"
+        updated_find = "-"
+        metacritic_find = "-"
+        background_image_find = "/assets/images/icons/pkg.png"
+    else:
+        root = ET.Element("game")
+        name = ET.SubElement(root, "name")
+        name.text = name_find
+        rating = ET.SubElement(root, "rating")
+        rating.text = rating_find
+        released = ET.SubElement(root, "released")
+        released.text = released_find
+        genres = ET.SubElement(root, "genres")
+        genre_names = genres_find
+        genres.text = ', '.join(genre_names)
+        platforms = ET.SubElement(root, "platforms")
+        platform_names = platforms_find
+        platforms.text = ', '.join(platform_names)
+        ratings_count = ET.SubElement(root, "ratings_count")
+        ratings_count.text = ratings_count_find
+        updated = ET.SubElement(root, "updated")
+        updated.text = updated_find
+        metacritic = ET.SubElement(root, "metacritic")
+        metacritic.text = metacritic_find
+        background_image = ET.SubElement(root, "background_image")
+        background_image.text = background_image_find
+        description = ET.SubElement(root, "description")
+        description.text = desc
+        tree = ET.ElementTree(root)
+        tree.write(xml_path)
+    if error:
+        response = {"status": False, "data": None, "error": error}
+    else:
+        response = {"status": True, "data": None, "error": error}
+    return response
 
 
 def update_xml_file(xml_path_update, title_update, genres_update, platforms_update, released_update, image_update, description_update, rating_update, ratings_count_update, updated_update, metacritic_update):

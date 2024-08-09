@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/base.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/font-awesome-all.min.js"></script>
+    <script src="/assets/js/sweetalert2.min.js"></script>
+    <script src="/assets/js/feather.min.js"></script>
 </head>
 
 <body>
@@ -42,14 +47,14 @@
                                 <div class="header-logo"><a href="/"><span data-mask-src="/assets/images/{{WEB_LOGO}}"></span> <img style="max-width: 200px;" src="/assets/images/{{WEB_LOGO}}" alt="PS Package Sender"></a></div>
                             </div>
                         </div>
-                        <div class="row col-6 col-sm-6 col-lg-3 mt-3">
-                            <div>
-                                <select name="ps_ip" class="form-control" id="ps_ip" onchange="update_ps_address()">
+                        <div class="row">
+                            <div class="ml-10">
+                                <select name="ps_ip" class="form-control header_btn" id="ps_ip" onchange="update_ps_address()">
                         
                                 </select>
                             </div>
-                            <div>
-                                <button class="form-control"  data-toggle="modal" data-target="#settingsModal">Settings <i class="bi bi-gear"></i></button>
+                            <div class="ml-10 mr-10">
+                                <button class="form-control header_btn"  data-toggle="modal" data-target="#settingsModal"><i class="bi bi-gear"></i></button>
                             </div>
                         </div> 
                         
@@ -86,28 +91,28 @@
                             </div>
                             <div class="row row-sm">
                                 <div class="col-md-6 display_flex_center">
-                                    <label class="toggle display_flex" onchange="local_pkg_switch()">
-                                        <input class="toggle-checkbox" id="local_pkg_switch" type="checkbox">
+                                    <label class="toggle display_flex mt-30" onchange="local_pkg_switch()">
+                                        <input class="toggle-checkbox" name="local_pkg_enabled" id="local_pkg_switch" type="checkbox">
                                         <div class="toggle-switch" on></div>
                                         <span class="toggle-label">Local Package Repository</span>
                                     </label>
                                 </div>
-                                <div class="col-md-6" id="local_repo_input_div">
+                                <div class="col-md-6" id="local_ip_address_div">
                                     <div class="form-group">
-                                        <p class="mg-b-10">Local Repository Directory</p>
-                                        <input type="text" class="" name="title" id="modal_game_title" disabled value="local_pkg">
+                                        <p class="mg-b-10">Local IP Address</p>
+                                        <input type="text" class="" name="local_ip_address" id="local_ip_address" placeholder="Ex: 192.168.1.10">
                                     </div>
                                 </div>
                                 <div class="col-md-6"  id="remote_repo_input_div">
                                     <div class="form-group">
                                         <p class="mg-b-10">Remote Repository Web Address</p>
-                                        <input type="text" class="form-control" name="title" id="modal_game_title" placeholder="Ex: http://192.168.1.10:8080">
+                                        <input type="text" class="form-control" name="remote_repository_address" id="remote_repository_address" placeholder="Ex: http://192.168.1.10:8080">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6 display_flex_center">
-                                    <label class="toggle display_flex" onchange="rawg_api_switch()">
-                                        <input class="toggle-checkbox" id="rawg_api_switch" type="checkbox">
+                                    <label class="toggle display_flex mt-30" onchange="rawg_api_switch()">
+                                        <input class="toggle-checkbox" name="rawg_api_enabled" id="rawg_api_switch" type="checkbox">
                                         <div class="toggle-switch" on></div>
                                         <span class="toggle-label">RAWG API</span>
                                     </label>
@@ -115,24 +120,26 @@
                                 <div class="col-md-6" id="rawg_api_switch_div">
                                     <div class="form-group">
                                         <p class="mg-b-10">RAWG API Key</p>
-                                        <input type="text" class="" name="title" id="rawg_api_switch_input" placeholder="Ex: fdsferc54fdsf45a3745643agdd55f">
+                                        <input type="text" class="" name="rawg_api_key" id="rawg_api_key" placeholder="Ex: fdsferc54fdsf45a3745643agdd55f">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <p class="mg-b-10">Repository Type</p>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps4" value="ps4">
-                                            <label class="form-check-label" for="repo_type_ps4">PS4</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps5" value="ps5">
-                                            <label class="form-check-label" for="repo_type_ps5">PS5</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_mixed" value="mixed">
-                                            <label class="form-check-label" for="repo_type_mixed">Mixed</label>
+                                        <div class="mt-35">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps4">
+                                                <label class="form-check-label" for="repo_type_ps4">PS4</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_ps5">
+                                                <label class="form-check-label" for="repo_type_ps5">PS5</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="repo_type_options" id="repo_type_mixed">
+                                                <label class="form-check-label" for="repo_type_mixed">Mixed</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +147,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <p class="mg-b-10">Website Title</p>
-                                        <input type="text" class="form-control" name="" id="" placeholder="Ex: PS4 PKG Sender">
+                                        <input type="text" class="form-control" name="web_title" id="web_title" placeholder="Ex: PS4 PKG Sender">
                                     </div>
                                 </div> 
 
@@ -149,7 +156,7 @@
                                         <p class="mg-b-10">PS IP Addresses</p>
                                         <span class="text-muted small">Enter each PS address on a separate line in the format: Name=PS_IP_Address (e.g., Hesam=192.168.1.20).</span>
                                         
-                                        <textarea class="form-control" name="description" id="modal_game_description" rows="3"></textarea>
+                                        <textarea class="form-control" name="ps_ip_addresses" id="ps_ip_addresses" rows="3"></textarea>
                                     </div>
                                 </div>
 
@@ -170,14 +177,6 @@
 
         </div>
     </section>
-
-
-    <script src="/assets/js/jquery.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/base.js"></script>
-    <script src="/assets/js/font-awesome-all.min.js"></script>
-    <script src="/assets/js/sweetalert2.min.js"></script>
-    <script src="/assets/js/feather.min.js"></script>
 </body>
-
+<script src="/assets/js/base.js"></script>
 </html>
