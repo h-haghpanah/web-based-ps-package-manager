@@ -10,6 +10,26 @@ Welcome to the PlayStation Package Manager! This web-based application allows yo
 - **PlayStation Management:** Define and manage multiple PlayStation consoles, choosing which to send packages to.
 - **Package Types:** Organize game packages into Install, Update, and DLC categories for each game.
 
+1. **Clone the Repository:**
+   ```bash
+   git clone [repository link]  # Replace with your actual repository link
+   cd [repository folder]       # Replace with the cloned repository folder name
+   ```
+2. **Install Requirements:**
+   Make sure you have Python installed. Then, install the required dependencies by running:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Run the Application:**
+   Start the application by running:
+   ```bash
+   python app.py
+   ```
+4. **Access the Application:**
+   Start the application by running:
+   ```bash
+   python app.py
+   ```
 ## Initial Configuration
 To set up the PlayStation Package Sender, follow these steps:
 
