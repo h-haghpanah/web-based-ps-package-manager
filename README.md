@@ -1,7 +1,7 @@
-# PlayStation Package Sender - Documentation
+# PlayStation Package Manager - Documentation
 
 ## Overview
-Welcome to the PlayStation Package Sender! This web-based application allows you to manage and send PlayStation packages (PKGs) to your local or remote PlayStation consoles effortlessly. The application integrates with the RAWG API to fetch game metadata and provides a flexible setup for managing local or remote package repositories.
+Welcome to the PlayStation Package Manager! This web-based application allows you to manage and send PlayStation packages (PKGs) to your local or remote PlayStation consoles effortlessly. The application integrates with the RAWG API to fetch game metadata and provides a flexible setup for managing local or remote package repositories.
 
 ## Key Features
 - **Web-Based Interface:** Access the application from any device with a web browser.
