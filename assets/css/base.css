@@ -135,3 +135,7 @@ select {
 	background: #6b6b6b !important;
 	color: #fff !important;
 }
+
+.mh-600 {
+	max-height: 600px !important;
+}

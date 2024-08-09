@@ -181,7 +181,7 @@ def game(path):
         rawg_ap_reload_btn_status = "disabled"
     if not os.path.exists(xml_path):
         name = path
-        background_image = "assets/images/icons/pkg.png"
+        background_image = "/assets/images/icons/pkg.png"
         genres = "Not specified"
         platforms = "Not specified"
         released = "Not specified"
@@ -292,6 +292,7 @@ def submit_game_info():
     updated = request.form.get("updated")
     metacritic = request.form.get("metacritic")
     game_xml_name = request.form.get("game_xml_name")
+    game_xml_name = urllib.parse.unquote(game_xml_name)
     xml_path = f"assets/game_info/{game_xml_name}"
     try:
         update_xml_file(xml_path_update=xml_path, title_update=title, genres_update=genres, platforms_update=platforms,
