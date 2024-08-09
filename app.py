@@ -71,6 +71,15 @@ def root():
     return render_template("home.html", WEB_TITLE=web_title, WEB_LOGO=web_logo)
 
 
+@app.route("/user_guide")
+def user_guide():
+    config = get_config()
+    web_title = config.get("general", "web_title")
+    repository_type = config.get("ps", "repository_type")
+    web_logo = f"logo-{repository_type}.png"
+    return render_template("user_guide.html", WEB_TITLE=web_title, WEB_LOGO=web_logo)
+
+
 @app.route("/game_list")
 def game_list():
     config = get_config()

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<header>
+    <h2 class="hwhite mt-30">PlayStation Package Sender - User Guide</h2>
+</header>
+
+<section>
+    <h4 class="hwhite">Overview</h4>
+    <p>Welcome to the PlayStation Package Sender! This web-based application allows you to manage and send PlayStation packages (PKGs) to your local or remote PlayStation consoles effortlessly. The application integrates with the RAWG API to fetch game metadata and provides a flexible setup for managing local or remote package repositories.</p>
+</section>
+
+<section>
+    <h4 class="hwhite">Key Features</h4>
+    <ul>
+        <li><strong>Web-Based Interface:</strong> Access the application from any device with a web browser.</li>
+        <li><strong>RAWG API Integration:</strong> Fetch game metadata automatically for easy management and identification.</li>
+        <li><strong>Multiple Repository Support:</strong> Configure both local and remote package repositories for flexible storage options.</li>
+        <li><strong>PlayStation Management:</strong> Define and manage multiple PlayStation consoles, choosing which to send packages to.</li>
+        <li><strong>Package Types:</strong> Organize game packages into Install, Update, and DLC categories for each game.</li>
+    </ul>
+</section>
+
+<section>
+    <h4 class="hwhite">Initial Configuration</h4>
+    <p>To set up the PlayStation Package Sender, follow these steps:</p>
+    <ol>
+        <li><strong>Access Settings:</strong> Click the settings button at the top of the interface.</li>
+        <li><strong>Local Package Repository:</strong> Toggle the switch to <code>ON</code> if you are using a local repository. Enter the local IP address in the <code>Local IP Address</code> field. The default port is 85, which can be changed in the <code>config.ini</code> file under the <code>local_port</code> setting.</li>
+        <li><strong>Remote Package Repository:</strong> If using a remote repository, toggle the <code>Local Package Repository</code> switch to <code>OFF</code>. Enter the remote repository's web address in the <code>Remote Repository Web Address</code> field (e.g., <code>http://192.168.1.10:8080</code>).</li>
+        <li><strong>Ensure Firewall Settings:</strong> Make sure your system's firewall allows inbound connections on the specified port and web server.</li>
+        <li><strong>File Organization:</strong> Store your game packages in folders with the following structure:
+            <pre class="pre_style">
+            /[Game Name]/
+                ├── Install/
+                ├── Update/
+                └── DLC/
+            </pre>
+        </li>
+        <li><strong>Remote Server Configuration:</strong> If using a remote server, place the <code>index.php</code> file from <code>remote_web_server_files/</code> in the root directory of your remote web server. This is critical for providing file and folder information.</li>
+    </ol>
+</section>
+
+<section>
+    <h4 class="hwhite">Managing PlayStation Consoles</h4>
+    <p>To define and manage your PlayStation consoles:</p>
+    <ol>
+        <li>In the settings, go to the <strong>PS IP Addresses</strong> section.</li>
+        <li>Enter each console's details in the format: <code>[Friendly Name]=[IP Address]</code>. Example: <code>hesam=192.168.1.20</code></li>
+        <li>Use the dropdown menu at the top of the main interface to select which console to send packages to.</li>
+    </ol>
+</section>
+
+<section>
+    <h4 class="hwhite">Using RAWG API</h4>
+    <p>To fetch game metadata using the RAWG API:</p>
+    <ol>
+        <li>Enable the RAWG API in the settings.</li>
+        <li>Sign up on the RAWG website and obtain your free API key: <a href="https://rawg.io/signup" target="_blank">Sign Up</a></li>
+        <li>Enter your API key in the <code>RAWG API Key</code> field.</li>
+    </ol>
+</section>
+
+<section id="about-me">
+    <h4 class="hwhite">About Me</h4>
+    <p>Hi, I'm <strong>Hesam Haghpanah</strong>, a Python developer and a fan of video games. I developed this project to provide an easier way to manage and send PlayStation packages from a web-based platform. If you'd like to check out the code or contribute, you can find the repository at:</p>
+    <p><a href="[repo link]" target="_blank">[repo link]</a></p>
+    <p>If you have any questions or suggestions, feel free to reach out to me at: <a href="mailto:h.haghpanah@outlook.com">h.haghpanah@outlook.com</a></p>
+    <p>Hope you enjoy and have a great gaming time!</p>
+</section>
+
+<footer>
+    <p>&copy; 2024 PlayStation Package Sender. All rights reserved.</p>
+</footer>
+  
+    
+
+{% endblock %}

@@ -126,3 +126,12 @@
 select {
     background: rgb(11, 14, 19) !important; /* Removes background including the arrow */
 }
+
+.hwhite{
+    color: #fff;
+}
+
+.pre_style{
+	background: #6b6b6b !important;
+	color: #fff !important;
+}
