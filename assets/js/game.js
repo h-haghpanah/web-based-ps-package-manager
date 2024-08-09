@@ -110,7 +110,7 @@ function reload_rawg_game_info_alert(){
     });
     
     swalWithBootstrapButtons.fire({
-        title: 'Are you sure?',
+        title: 'Reload game info with RAWG API',
         text: "You are about to reload game info from the RAWG API. Please confirm your choice.",
         icon: 'info',
         showCancelButton: true,

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 import json
 from tools import clean_url, parse_string_to_list
 import configparser
+import urllib.parse
 
 
 LOCAL_PKG_PATH = "local_pkg"
@@ -51,34 +52,6 @@ repository_type = ps4
     config.read(config_path)
     return config
 
-
-# REMOTE_PKG_REPOSITORY_WEB_PROTOCOL = config("REMOTE_PKG_REPOSITORY_WEB_PROTOCOL", cast=str, default="http")
-# REMOTE_PKG_REPOSITORY_WEB_IP_ADDRESS = config("REMOTE_PKG_REPOSITORY_WEB_IP_ADDRESS", cast=str)
-# REMOTE_PKG_REPOSITORY_WEB_PORT = config("REMOTE_PKG_REPOSITORY_WEB_PORT", cast=str)
-# LOCAL_PKG = config("LOCAL_PKG", cast=bool)
-# LOCAL_PKG_PATH = "local_pkg"
-# if not os.path.exists(LOCAL_PKG_PATH):
-#     os.mkdir(LOCAL_PKG_PATH)
-# if LOCAL_PKG_PATH[-1] == "/" or LOCAL_PKG_PATH[-1] == "\\":
-#     LOCAL_PKG_PATH = LOCAL_PKG_PATH[:-1]
-# LOCAL_IP_ADDRESS = config("LOCAL_IP_ADDRESS", cast=str)
-
-# RAWG_API_KEY = config("RAWG_API_KEY", cast=str, default="")
-# PS_ADDRESSES = config("PS_ADDRESSES", cast=str)
-# CURRENT_SELECTED_PS_FILE_PATH = "selected_ps_ip.txt"
-# DEBUG = config("DEBUG", cast=bool, default=False)
-# REPOSITORY = config("REPOSITORY", cast=str, default="mixed")
-# if REPOSITORY.lower() == "ps4":
-#     WEB_TITLE = "PS4 Package Sender"
-#     WEB_LOGO = "logo-ps4.png"
-# elif REPOSITORY.lower() == "ps5":
-#     WEB_TITLE = "PS5 Package Sender"
-#     WEB_LOGO = "logo-ps5.png"
-# else:
-#     WEB_TITLE = "PS Package Sender"
-#     WEB_LOGO = "logo.png"
-# IGNORE_LIST = config("IGNORE_LIST", cast=str, default="[]")
-# IGNORE_LIST = parse_string_to_list(IGNORE_LIST)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mywebKey"
@@ -252,7 +225,8 @@ def game(path):
         elif key.lower() == "dlc":
             dlc_folder_name = key
             dlc_btn = True
-
+    if not description or description == "None":
+        description = ""
     return render_template("game.html", WEB_TITLE=web_title, WEB_LOGO=web_logo, background_image=background_image,
                            rating=rating, metacritic=metacritic, name=name, ratings_count=ratings_count, genres=genres,
                            platforms=platforms, released=released, updated=updated, install_btn=install_btn, update_btn=update_btn,
@@ -331,16 +305,13 @@ def reload_rawg_game_info():
     config = get_config()
     rawg_api_enabled = config.getboolean("rawg", "rawg_api_enabled")
     rawg_api_key = config.get("rawg", "rawg_api_key")
+    directory_name = urllib.parse.unquote(directory_name)
     xml_path = os.path.join("assets/game_info", directory_name+".xml")
-    print(directory_name)
-    print(reload_option)
     error = None
     if rawg_api_enabled:
         if reload_option == "withTitle":
-            print("Ddd")
             rawg_response = rawg_search(rawg_api_key, title, xml_path, desc=description)
         elif reload_option == "withDirectory":
-            print("x")
             rawg_response = rawg_search(rawg_api_key, directory_name.replace("_", " "), xml_path, desc=description)
         else:
             rawg_response = rawg_search(rawg_api_key, directory_name.replace("_", " "), xml_path, desc=description)
@@ -453,7 +424,7 @@ def send_pkg(path):
     config = get_config()
     local_pkg_enabled = config.getboolean("ps", "local_pkg_enabled")
     remote_repository_address = config.get("remote_web_server", "address")
-    local_operating_system_ip_address = config.get("local_operating_system", "ip_address")
+    local_operating_system_ip_address = config.get("local_system", "ip_address")
     local_web_server_port = config.get("local_webserver", "local_port")
     if local_pkg_enabled:
         pkg_url = f"http://{local_operating_system_ip_address}:{local_web_server_port}/{LOCAL_PKG_PATH}/{path}"

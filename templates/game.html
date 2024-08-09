@@ -39,7 +39,7 @@
                           <h5 class="download-wrap-title" id="game_metacritic">{{metacritic}}</h5><span class="download-wrap-text">Metacritic</span></div>
                   </div>
                   {% if install_btn or update_btn or dlc_btn %}
-                  <h2 class="game-info-title">Download Now</h2>
+                  <h2 class="game-info-title">Send PKG Now</h2>
                   {% endif %}
                   {% if install_btn %}
                   <button class="btn btn-dark bgc-black" data-toggle="modal" data-target="#installModal" onclick="pkg_list('{{game_path}}','{{install_folder_name}}')">Install</button>
@@ -207,8 +207,11 @@
                   </div>
                 </div>
                 <div class="modal-submit">
-                    <button class="btn btn-secondary" onclick="submit_game_info()">Submit</button>
-                    <button type="button" class="btn btn-warning" onclick="reload_rawg_game_info_alert()" {{rawg_ap_reload_btn_status}}><i class="bi bi-arrow-counterclockwise mr-10"></i>Reload RAWG API</button>
+                    <div>
+                      <button class="btn btn-success" onclick="submit_game_info()">Submit</button>
+                      <button class="btn btn-secondary"  data-dismiss="modal">Cancel</button>
+                    </div>
+                    <button type="button" class="btn btn-warning" onclick="reload_rawg_game_info_alert()" {{rawg_ap_reload_btn_status}}><i class="bi bi-arrow-counterclockwise mr-10"></i>RAWG</button>
                 </div>
               </div>
             </div>
