@@ -43,7 +43,7 @@ To fetch game metadata using the RAWG API:
 3. Enter your API key in the `RAWG API Key` field.
 
 ## About Me
-Hi, I'm **Hesam Haghpanah**, a Python developer and a fan of video games. I developed this project to provide an easier way to manage and send PlayStation packages from a web-based platform. If you'd like to check out the code or contribute, you can find the repository at:
+Hi, I'm **Hesam Haghpanah**, a developer and a fan of video games. I developed this project to provide an easier way to manage and send PlayStation packages from a web-based platform. If you'd like to check out the code or contribute, you can find the repository at:
 
 [Repository Link](https://github.com/h-haghpanah/web-based-ps-package-manager.git)
 
