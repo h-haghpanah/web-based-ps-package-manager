@@ -436,6 +436,7 @@ def send_pkg(path):
     remote_repository_address = config.get("remote_web_server", "address")
     local_operating_system_ip_address = config.get("local_system", "ip_address")
     local_web_server_port = config.get("local_webserver", "local_port")
+    repository_type = config.get("ps", "repository_type")
     if local_pkg_enabled:
         pkg_url = f"http://{local_operating_system_ip_address}:{local_web_server_port}/{LOCAL_PKG_PATH}/{path}"
     else:
@@ -445,8 +446,8 @@ def send_pkg(path):
         with open(SELECTED_PS_FILE_PATH, 'r') as file:
             ps_ip = file.read()
             file.close()
-        response = package_sender(pkg_url, ps_ip)
-        if response["status"] == "success":
+        response = package_sender(pkg_url=pkg_url, ps_ip=ps_ip, pkg_type=repository_type)
+        if "status" in response and response["status"] == "success":
             status = True
         else:
             status = False

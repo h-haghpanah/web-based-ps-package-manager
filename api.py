@@ -3,44 +3,34 @@ import json
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
 import os
-# import json
 
 
-# def package_sender(pkg_name, web_ip, web_port, ps4_ip):
-#     pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
-#     ps4_api = f"http://{ps4_ip}:12800/api/install"
-#     pkg_url = quote(pkg_url)
-#     data = {
-#         "type": "direct",
-#         "packages": [pkg_url]
-#     }
-#     print(data)
-#     headers = {
-#         "Content-Type": "application/json"
-#     }
-#     response = requests.post(ps4_api, data=json.dumps(data), headers=headers)
-#     return json.loads(response.text)
-
-
-def package_sender(pkg_url, ps4_ip):
-    # pkg_url = f"http://{web_ip}:{web_port}/{pkg_name}"
-    print(pkg_url)
-    ps4_api = f"http://{ps4_ip}:12800/api/install"
+def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaHEN/games"):
     pkg_url = quote(pkg_url)
-    data = {
-        "type": "direct",
-        "packages": [pkg_url]
-    }
-    print(data)
     headers = {
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
     }
-    response = requests.post(ps4_api, data=json.dumps(data), headers=headers)
-    return json.loads(response.text)
+    if pkg_type == "ps4":
+        endpoint = f"http://{ps_ip}:12800/api/install"
+        data = {
+            "type": "direct",
+            "packages": [pkg_url]
+        }
+        response = requests.post(endpoint, data=json.dumps(data), headers=headers)
+        return json.loads(response.text)
+    elif pkg_type == "ps5":
+        endpoint = f"http://{ps_ip}:8283/api/v1/get_file"
+        data = {
+            "url": pkg_url,
+            "local_destination": local_destination,
+        }
+        response = requests.post(endpoint, data=json.dumps(data), headers=headers)
+        return json.loads(response.text)
+    return {"status": "failed"}
 
 
-def task_status(task_id, ps4_ip):
-    ps4_api = f"http://{ps4_ip}:12800/api/get_task_progress"
+def task_status(task_id, ps_ip):
+    ps4_api = f"http://{ps_ip}:12800/api/get_task_progress"
     data = {
         "task_id": task_id
     }
