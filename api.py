@@ -34,6 +34,7 @@ def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaH
         response = requests.post(endpoint, data=json.dumps(data), headers=headers)
         print(response)
         print(response.text)
+        print(data)
         return json.loads(response.text)
     return {"status": "failed"}
 
