@@ -1,15 +1,22 @@
 import requests
 import json
-from urllib.parse import quote
+from urllib.parse import urlsplit, urlunsplit, quote
 import xml.etree.ElementTree as ET
 import os
 
 
 def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaHEN/games"):
-    pkg_url = quote(pkg_url)
     headers = {
             "Content-Type": "application/json"
     }
+    parts = urlsplit(pkg_url)
+    pkg_url = urlunsplit((
+        parts.scheme,
+        parts.netloc,
+        quote(parts.path),
+        parts.query,
+        parts.fragment,
+    ))
     if pkg_type == "ps4":
         endpoint = f"http://{ps_ip}:12800/api/install"
         data = {
@@ -24,6 +31,8 @@ def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaH
             "url": pkg_url,
             "local_destination": local_destination,
         }
+        print(endpoint)
+        print(data)
         response = requests.post(endpoint, data=json.dumps(data), headers=headers)
         return json.loads(response.text)
     return {"status": "failed"}
