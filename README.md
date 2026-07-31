@@ -56,6 +56,28 @@ To define and manage your PlayStation consoles:
 2. Enter each console's details in the format: `[Friendly Name]=[IP Address]`. Example: `hesam=192.168.1.20`
 3. Use the dropdown menu at the top of the main interface to select which console to send packages to.
 
+## Repository Type Configuration (PS4 / PS5)
+
+The application allows you to select the target console's **Repository Type** directly from the Settings panel. This determines which payload is required on your console to receive and install packages sent from the app.
+
+1. **Access Settings:** Open the settings panel and locate the **Repository Type** option.
+2. **Choose PS4 or PS5**, depending on the console you're sending packages to.
+
+### PS4
+If **PS4** is selected as the repository type, your console must have a package installer payload running in order to receive and install files sent from this app.
+
+- Install the payload from: [pkg-zone.com/details/FLTZ00003](https://pkg-zone.com/details/FLTZ00003)
+- Once the payload is running on your PS4, packages sent from the app will be received and installed automatically.
+
+### PS5
+If **PS5** is selected as the repository type, your console must be running the **ps5downloader** payload to receive files sent from the app.
+
+- Download and install the payload: [ps5_file_downloader repository](https://github.com/h-haghpanah/ps5_file_downloader)
+
+By default, files sent to the PS5 are placed in `/data/etaHEN/games`, using single-file game formats (exFAT, PFSC, etc.). 
+
+> **Note:** If you have **ShadowMount** or **etaHEN's ShadowMount Plus** payload active on your PS5, games will be installed automatically once received.
+
 ## Using RAWG API
 To fetch game metadata using the RAWG API:
 
