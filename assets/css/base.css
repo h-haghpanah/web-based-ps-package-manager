@@ -128,42 +128,6 @@ select{
 .text_center{ justify-content: center; display: flex; }
 .mh-600{ max-height: 600px !important; }
 
-/* ---- HUD corner-bracket frame (signature element) ----------------------
-   Used on cards / hero art to evoke a target-lock reticle. Toggle visible
-   on hover/focus so it reads as "selected", not decoration everywhere. */
-.hud-frame{
-    position: relative;
-}
-.hud-frame::before,
-.hud-frame::after{
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--accent);
-    opacity: 0;
-    transition: opacity .2s ease, transform .2s ease;
-    pointer-events: none;
-    z-index: 2;
-}
-.hud-frame::before{
-    top: -6px; left: -6px;
-    border-right: none; border-bottom: none;
-    transform: translate(4px,4px);
-}
-.hud-frame::after{
-    bottom: -6px; right: -6px;
-    border-left: none; border-top: none;
-    transform: translate(-4px,-4px);
-}
-.hud-frame:hover::before,
-.hud-frame:hover::after,
-.hud-frame:focus-within::before,
-.hud-frame:focus-within::after{
-    opacity: 1;
-    transform: translate(0,0);
-}
-
 /* ---- cards / panels ------------------------------------------------- */
 .card-bg-dark,
 .custom-card{
