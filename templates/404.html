@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link href="/assets/css/404.css" rel="stylesheet">
+
+<div class="error-wrap">
+    <div>
+        <span class="error-tag">Connection Lost</span>
+        <h1 class="error-code">404</h1>
+        <h3 class="error-title hwhite">Signal Lost In The Void</h3>
+        <p class="error-desc">
+            The page you're looking for isn't on this server &mdash; it may have
+            been moved, renamed, or never existed. Respawn at the home screen
+            and try again.
+        </p>
+        <div class="error-actions">
+            <a href="/" class="btn-home">
+                <i class="bi bi-house-door"></i> Return To Home
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,108 @@
+/* ==========================================================================
+   404 — "SIGNAL LOST" arcade game-over screen
+   ========================================================================== */
+
+.error-wrap{
+    min-height: calc(100vh - var(--header-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-wrap::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+}
+
+.error-code{
+    font-family: var(--font-display);
+    font-size: clamp(90px, 22vw, 220px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+    margin: 0;
+    position: relative;
+    letter-spacing: .02em;
+    text-shadow:
+        3px 0 0 rgba(255,69,87,.6),
+        -3px 0 0 rgba(105,255,71,.6);
+    animation: glitch 3.2s infinite steps(1);
+}
+
+@keyframes glitch{
+    0%, 92%, 100% { text-shadow: 3px 0 0 rgba(255,69,87,.6), -3px 0 0 rgba(105,255,71,.6); transform: translate(0,0); }
+    93% { text-shadow: -4px 0 0 rgba(255,69,87,.7), 4px 0 0 rgba(105,255,71,.7); transform: translate(-2px,1px); }
+    95% { text-shadow: 4px 1px 0 rgba(255,69,87,.7), -4px -1px 0 rgba(105,255,71,.7); transform: translate(2px,-1px); }
+    97% { text-shadow: 3px 0 0 rgba(255,69,87,.6), -3px 0 0 rgba(105,255,71,.6); transform: translate(0,0); }
+}
+
+.error-tag{
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 6px 16px;
+    margin-bottom: 18px;
+}
+.error-tag::before{ content: "● "; color: var(--danger); }
+
+.error-title{
+    font-size: clamp(20px, 4vw, 30px);
+    color: var(--text);
+    margin: 10px 0 8px;
+    letter-spacing: .06em;
+}
+
+.error-desc{
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    max-width: 420px;
+    margin: 0 auto 30px;
+    line-height: 1.7;
+}
+
+.error-actions{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-home{
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-size: 13px;
+    padding: 12px 26px;
+    background: var(--accent);
+    color: #06210a;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent);
+    transition: transform .15s ease, box-shadow .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-home:hover{
+    color: #06210a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+@media (max-width: 480px){
+    .error-actions{ flex-direction: column; align-items: stretch; }
+}

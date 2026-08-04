@@ -1,37 +1,182 @@
+/* ==========================================================================
+   Game detail page
+   ========================================================================== */
 
-
-#hero {
-    background-size: cover;
-    text-align: center;
-    color: #fff;
-    padding: 100px 0;
+.page-single.game-details-wrap{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
-
-.d-grid {
-    display: grid !important
+.page-img{
+    margin-bottom: 0 !important;
+    position: relative;
+}
+.page-img img{
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+}
+.page-img::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 40%, var(--card) 100%);
 }
 
-.gap-2 {
-    gap: .5rem !important
+.page-content{ padding: 24px 28px 28px; }
+
+.game-title-wrap{ margin-bottom: 14px; }
+.page-title{
+    font-size: 30px;
+    letter-spacing: .03em;
+    margin: 0;
+}
+
+#game_description{
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.checklist.list-two-column ul{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.checklist li{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-muted);
+}
+.checklist li i{ color: var(--accent); }
+.checklist li span.text-white{ color: var(--text) !important; margin-right: 2px; }
+
+/* ---- sidebar ----------------------------------------------------------- */
+.sidebar-area .widget{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+}
+
+.game-rating-info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+}
+.rating-wrap .game-rating{
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--gold);
+}
+.rating-wrap .review-count{ color: var(--text-faint); font-family: var(--font-mono); font-size: 12px; }
+
+.download-wrap{ text-align: right; }
+.download-wrap-title{
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--accent);
+    margin: 0;
+}
+.download-wrap-text{ font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-transform: uppercase; }
+
+.game-info-title{
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    letter-spacing: .08em;
+}
+
+.sidebar-area hr{ border-color: var(--border) !important; margin: 18px 0; opacity: 1; }
+
+/* ---- PKG list buttons inside modals ------------------------------------*/
+.d-grid{ display: grid !important; }
+.gap-2{ gap: .5rem !important; }
+
+#installModal_content .btn,
+#updateModal_content .btn,
+#dlcModal_content .btn{
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 12px 14px;
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#installModal_content .btn::before,
+#updateModal_content .btn::before,
+#dlcModal_content .btn::before{
+    content: "▸";
+    color: var(--accent);
+}
+#installModal_content .btn:hover,
+#updateModal_content .btn:hover,
+#dlcModal_content .btn:hover{
+    border-color: var(--accent) !important;
+    background: rgba(105,255,71,.06) !important;
+}
+#installModal_content .btn:disabled,
+#updateModal_content .btn:disabled,
+#dlcModal_content .btn:disabled{
+    opacity: .5;
+    cursor: progress;
 }
 
 .image_btn{
     background: none;
-    border: solid;
-    border-radius: 2px;
-    border-width: 1px;
-    border-color: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
     padding: 0;
     margin: 0;
     cursor: pointer;
+    transition: border-color .15s ease;
+}
+.image_btn:hover{ border-color: var(--accent); }
+
+#hero{
+    background-size: cover;
+    text-align: center;
+    color: var(--text);
+    padding: 100px 0;
 }
 
-
-.image_btn:hover {
-    border: solid;
-    border-radius: 2px;
-    border-width: 1px;
-    border-color: green;  /* Green border on hover */
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 992px){
+    .page-content{ padding: 20px; }
+    .page-title{ font-size: 24px; }
 }
 
+@media (max-width: 768px){
+    .checklist.list-two-column ul{ grid-template-columns: 1fr; }
+    .page-img img{ max-height: 260px; }
+    .sidebar-area{ margin-top: 20px; }
+    .game-rating-info{ flex-direction: column; align-items: flex-start; }
+    .download-wrap{ text-align: left; }
+}
+
+@media (max-width: 480px){
+    .page-title{ font-size: 20px; }
+    .page-content{ padding: 16px; }
+    .sidebar-area .widget{ padding: 16px; }
+}

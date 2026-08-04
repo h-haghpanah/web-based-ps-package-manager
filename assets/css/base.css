@@ -1,141 +1,462 @@
-.modal-medium{
-    max-width: 768px;
+/* ==========================================================================
+   PS Package Sender — Design Tokens
+   HUD / arcade-console aesthetic: near-black surfaces, acid-green accent,
+   condensed display type for headings, mono type for data/labels.
+   ========================================================================== */
+
+:root{
+    --bg:            #08090b;
+    --bg-elevated:   #101217;
+    --card:          #14161c;
+    --card-hover:    #1a1d24;
+    --border:        rgba(255,255,255,.08);
+    --border-strong: rgba(255,255,255,.16);
+
+    --accent:        #69ff47;   /* signature HUD green   */
+    --accent-dim:     #3ea82c;
+    --accent-glow:   rgba(105,255,71,.35);
+    --gold:          #ffc93c;   /* ratings / metacritic   */
+    --danger:        #ff4557;
+
+    --text:          #f2f3f5;
+    --text-muted:    #9aa0a8;
+    --text-faint:    #5c6068;
+
+    --font-display:  'Rajdhani', 'Segoe UI', sans-serif;
+    --font-body:     'Inter', 'Segoe UI', sans-serif;
+    --font-mono:     'JetBrainsMono', 'Courier New', monospace;
+
+    --radius-sm: 4px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --header-h: 64px;
 }
 
-.card-bg-dark{
-    background-color: #000 !important;
+*{ box-sizing: border-box; }
+
+html, body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
 }
 
-.h-white{
-    color: white;
+h1,h2,h3,h4,h5,h6{
+    font-family: var(--font-display);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
-.modal-submit{
+a{ color: var(--accent); text-decoration: none; }
+a:hover{ color: #8dff70; }
+
+/* ---- scanline / grid backdrop --------------------------------------- */
+body{
+    background-image:
+        radial-gradient(circle at 15% -10%, rgba(105,255,71,.06), transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(255,201,60,.05), transparent 35%);
+    background-attachment: fixed;
+}
+
+/* ---- header ------------------------------------------------------------ */
+.th-header.header-default{
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+}
+
+.menu-area{ padding: 10px 0; }
+
+.menu-area .container > div{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo img{
+    max-width: 160px;
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.header-actions{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 8px;
+}
+
+.header_btn{
+    height: 40px !important;
+    min-width: 40px;
+    padding: 0 12px !important;
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-sm) !important;
+    font-family: var(--font-mono);
+    transition: border-color .15s ease, box-shadow .15s ease, color .15s ease;
+}
+.header_btn a{ color: inherit; }
+.header_btn:hover{
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 1px var(--accent-glow);
+    color: var(--accent) !important;
+}
+.header_btn:hover a{ color: var(--accent); }
+
+#ps_ip.header_btn{
+    padding: 0 10px !important;
+    max-width: 220px;
+}
+
+select{
+    background: var(--card) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+
+.logo-bg{ display:none; }
+
+/* ---- generic layout helpers ------------------------------------------- */
+.grey-bg{ background: var(--bg); }
+.display_none{ display: none !important; }
+.display_flex{ display: flex; }
+.display_flex_center{ display: flex; align-items: center; }
+.text_center{ justify-content: center; display: flex; }
+.mh-600{ max-height: 600px !important; }
+
+/* ---- HUD corner-bracket frame (signature element) ----------------------
+   Used on cards / hero art to evoke a target-lock reticle. Toggle visible
+   on hover/focus so it reads as "selected", not decoration everywhere. */
+.hud-frame{
+    position: relative;
+}
+.hud-frame::before,
+.hud-frame::after{
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+.hud-frame::before{
+    top: -6px; left: -6px;
+    border-right: none; border-bottom: none;
+    transform: translate(4px,4px);
+}
+.hud-frame::after{
+    bottom: -6px; right: -6px;
+    border-left: none; border-top: none;
+    transform: translate(-4px,-4px);
+}
+.hud-frame:hover::before,
+.hud-frame:hover::after,
+.hud-frame:focus-within::before,
+.hud-frame:focus-within::after{
+    opacity: 1;
+    transform: translate(0,0);
+}
+
+/* ---- cards / panels ------------------------------------------------- */
+.card-bg-dark,
+.custom-card{
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.h-white{ color: var(--text); }
+.hwhite{ color: var(--text); }
+
+/* ---- buttons ---------------------------------------------------------- */
+.btn{
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+.btn-success{
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #06210a !important;
+    font-weight: 700;
+}
+.btn-success:hover{
+    background: #8dff70 !important;
+    border-color: #8dff70 !important;
+}
+.btn-secondary{
+    background: transparent !important;
+    border: 1px solid var(--border-strong) !important;
+    color: var(--text-muted) !important;
+}
+.btn-secondary:hover{ color: var(--text) !important; border-color: var(--text-muted) !important; }
+.btn-warning{
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    color: #241a00 !important;
+}
+.btn-dark.bgc-black{
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
+    padding: 10px 14px;
+}
+.btn-dark.bgc-black:hover{
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+.bgc-black{ background-color: var(--card) !important; }
+.border-black{ border-color: var(--border) !important; }
+
+/* ---- forms -------------------------------------------------------------*/
+.form-control,
+input[type="text"],
+textarea{
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-sm) !important;
+}
+.form-control:focus,
+input[type="text"]:focus,
+textarea:focus{
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow) !important;
+    outline: none;
+}
+.form-control::placeholder{ color: var(--text-faint) !important; }
+.form-check-label{ color: var(--text) !important; }
+.mg-b-10{ margin-bottom: 10px; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.main-content-label{ color: var(--text); font-family: var(--font-display); font-size: 20px; }
+.pre_style{
+    background: var(--bg-elevated) !important;
+    color: var(--accent) !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-family: var(--font-mono);
+}
+
+/* ---- toggle switch ------------------------------------------------------*/
+.toggle{ cursor: pointer; display: inline-block; }
+.toggle-switch{
+    display: inline-block;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    width: 58px;
+    height: 32px;
+    position: relative;
+    vertical-align: middle;
+    transition: background .25s;
+}
+.toggle-switch:before{
+    content: "";
+    display: block;
+    background: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    transition: left .25s;
+}
+.toggle:hover .toggle-switch:before{ box-shadow: 0 0 0 3px rgba(255,255,255,.1); }
+.toggle-checkbox:checked + .toggle-switch{
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.toggle-checkbox:checked + .toggle-switch:before{ left: 30px; }
+.toggle-checkbox{ position: absolute; visibility: hidden; }
+.toggle-label{ margin-left: 8px; position: relative; top: 1px; color: var(--text); }
+
+.disabled_background_dark_red{ background: rgba(255,69,87,.08) !important; border-color: rgba(255,69,87,.3) !important; }
+
+/* ---- modal -------------------------------------------------------------*/
+.modal-content{
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+.modal-medium{ max-width: 720px; }
+.modal-header{ border-bottom: 1px solid var(--border); }
+.modal-header .close{ color: var(--text); opacity: .7; text-shadow: none; }
+.modal-header .close:hover{ opacity: 1; color: var(--accent); }
+.modal-submit{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
     justify-content: space-between;
     padding: .75rem;
+    border-top: 1px solid var(--border);
 }
 
-.fa-star{
-    color: #d9b100 !important;
+.alert_input{ display: flex; justify-content: center; align-items: center; height: 40px; gap: 16px; }
+.font-size-12{ font-size: 12px !important; }
+
+/* ---- ratings / metacritic ------------------------------------------- */
+.fa-star{ color: var(--gold) !important; }
+.download_images{ max-width: 95px !important; }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px){
+    .header-logo img{ max-width: 130px; }
+    .menu-area .container > div{ gap: 8px; }
+    #ps_ip.header_btn{ max-width: 140px; font-size: 12px; }
+    .header_btn{ height: 36px !important; }
+    .modal-dialog{ margin: 10px; }
+    .row.row-sm > [class*="col-"]{ margin-bottom: 4px; }
 }
 
-.download_images{
-    max-width: 95px !important;
+@media (max-width: 480px){
+    .header-logo img{ max-width: 110px; }
+    .header_btn{ padding: 0 8px !important; font-size: 11px; }
 }
 
-.bgc-black{
-    background-color: #000 !important;
+@media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
 
-.border-black{
-    border-color: #000 !important;
+/* ==========================================================================
+   SweetAlert2 — HUD theme override (popups + toasts)
+   ========================================================================== */
+
+.swal2-container{
+    backdrop-filter: blur(2px);
 }
 
-
-
-.display_flex{
-    display: flex;
+.swal2-popup{
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-strong) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 1px var(--accent-glow) !important;
+    color: var(--text) !important;
+    font-family: var(--font-body) !important;
 }
 
-.display_flex_center{
-    display: flex;
-    align-items: center;
+.swal2-title{
+    font-family: var(--font-display) !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--text) !important;
+    font-size: 22px !important;
 }
 
-.toggle {
-	cursor: pointer;
-	display: inline-block;
-}
-.toggle-switch {
-	display: inline-block;
-	background: #ccc;
-	border-radius: 16px;
-	width: 58px;
-	height: 32px;
-	position: relative;
-	vertical-align: middle;
-	transition: background 0.25s;
-	&:before,
-	&:after {
-		content: "";
-	}
-	&:before {
-		display: block;
-		background: linear-gradient(to bottom, #fff 0%,#eee 100%);
-		border-radius: 50%;
-		box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
-		width: 24px;
-		height: 24px;
-		position: absolute;
-		top: 4px;
-		left: 4px;
-		transition: left 0.25s;
-	}
-	.toggle:hover &:before {
-		background: linear-gradient(to bottom, #fff 0%,#fff 100%);
-		box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
-	}
-	.toggle-checkbox:checked + & {
-		background: #6fc74d !important;
-		&:before {
-			left: 30px;
-		}
-	}
-}
-.toggle-checkbox {
-	position: absolute;
-	visibility: hidden;
-}
-.toggle-label {
-	margin-left: 5px;
-	position: relative;
-	top: 2px;
-    color: #fff;
+.swal2-html-container{
+    color: var(--text-muted) !important;
+    font-size: 14px !important;
+    line-height: 1.7;
 }
 
-.disabled_background_dark_red{
-    background: #250000 !important;
+.swal2-close{
+    color: var(--text-muted) !important;
+    transition: color .15s ease;
+}
+.swal2-close:hover{ color: var(--accent) !important; }
+
+/* ---- buttons ------------------------------------------------------- */
+.swal2-actions{ gap: 10px; }
+
+.swal2-styled{
+    font-family: var(--font-mono) !important;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-size: 13px !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 10px 22px !important;
+    box-shadow: none !important;
 }
 
-.form-check-label{
+.swal2-confirm{
+    background: var(--accent) !important;
+    color: #06210a !important;
+    font-weight: 700;
+}
+.swal2-confirm:hover{ background: #8dff70 !important; }
+.swal2-confirm:focus{ box-shadow: 0 0 0 3px var(--accent-glow) !important; }
+
+.swal2-cancel{
+    background: transparent !important;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--border-strong) !important;
+}
+.swal2-cancel:hover{ color: var(--text) !important; border-color: var(--text-muted) !important; }
+.swal2-cancel:focus{ box-shadow: 0 0 0 3px rgba(255,255,255,.12) !important; }
+
+.swal2-deny{
+    background: var(--danger) !important;
     color: #fff !important;
 }
 
-.alert_input {
-	display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
+/* ---- icons: recolor to HUD palette instead of default red/green/orange */
+.swal2-icon{ border-color: var(--border-strong) !important; }
+
+.swal2-icon.swal2-success{ border-color: var(--accent) !important; }
+.swal2-icon.swal2-success [class^='swal2-success-line']{ background-color: var(--accent) !important; }
+.swal2-icon.swal2-success .swal2-success-ring{ border-color: var(--accent-glow) !important; }
+.swal2-icon.swal2-success .swal2-success-fix{ background-color: transparent !important; }
+
+.swal2-icon.swal2-error{ border-color: var(--danger) !important; }
+.swal2-icon.swal2-error [class^='swal2-x-mark-line']{ background-color: var(--danger) !important; }
+
+.swal2-icon.swal2-warning{ border-color: var(--gold) !important; color: var(--gold) !important; }
+.swal2-icon.swal2-info{ border-color: #4fb8ff !important; color: #4fb8ff !important; }
+.swal2-icon.swal2-question{ border-color: var(--text-muted) !important; color: var(--text-muted) !important; }
+
+/* ---- form elements inside popups (e.g. reload-info radios) ------------ */
+.swal2-popup input,
+.swal2-popup textarea{
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: none !important;
+}
+.swal2-popup input:focus,
+.swal2-popup textarea:focus{
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow) !important;
+}
+.swal2-validation-message{
+    background: rgba(255,69,87,.1) !important;
+    color: var(--danger) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
 }
 
-.font-size-12{
-	font-size: 12px !important;
+/* ---- toast mode (showerror / showsuccess) ------------------------------ */
+.swal2-toast{
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-strong) !important;
+    border-left: 3px solid var(--accent) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5) !important;
 }
-
-.display_none {
-    display: none;
-  }
-
-.header_btn{
-	height: 40px !important;
-	padding: 10 10 10 10 !important;
+.swal2-toast.swal2-icon-error{ border-left-color: var(--danger) !important; }
+.swal2-toast.swal2-icon-success{ border-left-color: var(--accent) !important; }
+.swal2-toast .swal2-title{
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text) !important;
 }
-select {
-    background: rgb(11, 14, 19) !important; /* Removes background including the arrow */
+.swal2-toast .swal2-timer-progress-bar{
+    background: var(--accent-glow) !important;
 }
-
-.hwhite{
-    color: #fff;
-}
-
-.pre_style{
-	background: #6b6b6b !important;
-	color: #fff !important;
-}
-
-.mh-600 {
-	max-height: 600px !important;
-}
+.swal2-toast.swal2-icon-error .swal2-timer-progress-bar{ background: rgba(255,69,87,.35) !important; }

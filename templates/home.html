@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 
+<link href="/assets/css/home.css" rel="stylesheet">
 
-<link href="../assets/css/home.css" rel="stylesheet">
-<script src="../assets/js/home.js"></script>
-
-
-<div class="grey-bg container-fluid">
-  <section id="minimal-statistics">
-      <div id="game_list_title" class="display_none">
-        <p style="font-size: 20px; text-align: left; padding: 30px;" class="hwhite">Games</p>
-      </div>
-      <div class="mb-20">
-        <input type="text" id="searchInput" placeholder="What are you looking for?"  onkeyup="filterGames()">
-      </div>
-      <div id="game_list" class="row">
-        <div id="game_loading" class="loading">
-          <img src="../assets/images/loading_games.gif"></img>
-          <h4 class="hwhite text_center">Loading New Games ...</h4>
+<div class="grey-bg">
+    <section id="minimal-statistics">
+        <div id="game_list_title" class="display_none">
+            <p class="hwhite">Games</p>
         </div>
-      </div>
 
-  
-    
+        <div class="mb-20">
+            <input type="text" id="searchInput" placeholder="What are you looking for?" onkeyup="filterGames()" aria-label="Search games">
+        </div>
 
+        <div id="game_list" class="row">
+            <div id="game_loading" class="loading">
+                <img src="/assets/images/loading_games.gif" alt="Loading">
+                <h4 class="hwhite text_center">Loading New Games ...</h4>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="/assets/js/home.js"></script>
 {% endblock %}

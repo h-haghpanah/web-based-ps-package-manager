@@ -61,163 +61,129 @@
 </div>
 
 
-  
-
- 
-   
 <!-- Install Modal -->
 <div class="modal" id="installModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Install</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="installModal_content">
-
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Update Modal -->
-  <div class="modal" id="updateModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Update</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="updateModal_content">
-
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- DLC Modal -->
-  <div class="modal" id="dlcModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">DLC</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="dlcModal_content">
-           
-        </div>
-      </div>
-    </div>
-  </div>
-    
-  <!-- Edit Modal -->
-  <div class="modal" id="editModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-medium" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="editModal_content">
-          <div class="">
-            <div class="col-lg-12 col-md-12">
-              <div class="card custom-card card-bg-dark">
-                <div class="card-body">
-                  <div>
-                    <h6 class="main-content-label mb-1 h-white">Edit Game From</h6>
-                  </div>
-                  <div class="row row-sm">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Game Title</p>
-                        <input type="text" class="form-control" name="title" id="modal_game_title" value="{{name}}">
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Genres</p>
-                        <input type="text" class="form-control" name="genres" id="modal_game_genres" value="{{genres}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Platforms</p>
-                        <input type="text" class="form-control" name="platforms" id="modal_game_platforms" value="{{platforms}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Released</p>
-                        <input type="text" class="form-control" name="released" id="modal_game_released" value="{{released}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Updated</p>
-                        <input type="text" class="form-control" name="updated" id="modal_game_updated" value="{{updated}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Rating</p>
-                        <input type="text" class="form-control" name="rating" id="modal_game_rating" value="{{rating}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Ratings Count</p>
-                        <input type="text" class="form-control" name="ratings_count" id="modal_game_ratings_count" value="{{ratings_count}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <p class="mg-b-10">Metacritic</p>
-                        <input type="text" class="form-control" name="metacritic" id="modal_game_metacritic" value="{{metacritic}}">
-                      </div>
-                    </div> 
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <p class="mg-b-10">Image</p>
-                        <input type="text" class="form-control" name="image" id="modal_game_image" value="{{background_image}}">
-                      </div>
-                    </div> 
-
-                    <div class="col-md-12 ">
-                      <div class="form-group mb-0">
-                        <p class="mg-b-10">Description</p>
-                        <textarea class="form-control" name="description" id="modal_game_description" rows="3">{{description}}</textarea>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="modal-submit">
-                    <div>
-                      <button class="btn btn-success" onclick="submit_game_info()">Submit</button>
-                      <button class="btn btn-secondary"  data-dismiss="modal">Cancel</button>
-                    </div>
-                    <button type="button" class="btn btn-warning" onclick="reload_rawg_game_info_alert()" {{rawg_ap_reload_btn_status}}><i class="bi bi-arrow-counterclockwise mr-10"></i>RAWG</button>
-                </div>
-              </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Install</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-          </div>
+            <div class="modal-body" id="installModal_content"></div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="updateModal_content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- DLC Modal -->
+<div class="modal" id="dlcModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DLC</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="dlcModal_content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-medium" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="main-content-label mb-0">Edit Game Info</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="editModal_content">
+                <div class="card custom-card card-bg-dark">
+                    <div class="card-body">
+                        <div class="row row-sm">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Game Title</p>
+                                    <input type="text" class="form-control" name="title" id="modal_game_title" value="{{name}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Genres</p>
+                                    <input type="text" class="form-control" name="genres" id="modal_game_genres" value="{{genres}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Platforms</p>
+                                    <input type="text" class="form-control" name="platforms" id="modal_game_platforms" value="{{platforms}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Released</p>
+                                    <input type="text" class="form-control" name="released" id="modal_game_released" value="{{released}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Updated</p>
+                                    <input type="text" class="form-control" name="updated" id="modal_game_updated" value="{{updated}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Rating</p>
+                                    <input type="text" class="form-control" name="rating" id="modal_game_rating" value="{{rating}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Ratings Count</p>
+                                    <input type="text" class="form-control" name="ratings_count" id="modal_game_ratings_count" value="{{ratings_count}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Metacritic</p>
+                                    <input type="text" class="form-control" name="metacritic" id="modal_game_metacritic" value="{{metacritic}}">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <p class="mg-b-10">Image</p>
+                                    <input type="text" class="form-control" name="image" id="modal_game_image" value="{{background_image}}">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-0">
+                                    <p class="mg-b-10">Description</p>
+                                    <textarea class="form-control" name="description" id="modal_game_description" rows="3">{{description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-submit">
+                        <div>
+                            <button class="btn btn-success" onclick="submit_game_info()">Submit</button>
+                            <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        <button type="button" class="btn btn-warning" onclick="reload_rawg_game_info_alert()" {{rawg_ap_reload_btn_status}}><i class="bi bi-arrow-counterclockwise mr-10"></i>RAWG</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

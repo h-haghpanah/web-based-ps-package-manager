@@ -1,14 +1,1 @@
-@font-face {
-  font-family: shabnam;
-  src: url(../fonts/Shabnam-FD.ttf);
-}
-
-.shabnam {
-    font-family: "shabnam","Lato", sans-serif;
-    font-size: 15px !important;
-}
-
-body{
-  font-family: "shabnam";
-  font-size: 15px !important;
-}
+@font-face{font-family:Rajdhani;src:url(../fonts/rajdhani/rajdhani-400.woff2);font-weight:400;font-display:swap}@font-face{font-family:Rajdhani;src:url(../fonts/rajdhani/rajdhani-600.woff2);font-weight:600;font-display:swap}@font-face{font-family:Rajdhani;src:url(../fonts/rajdhani/rajdhani-700.woff2);font-weight:700;font-display:swap}@font-face{font-family:Inter;src:url(../fonts/inter/inter-400.woff2);font-weight:400;font-display:swap}@font-face{font-family:Inter;src:url(../fonts/inter/inter-500.woff2);font-weight:500;font-display:swap}@font-face{font-family:Inter;src:url(../fonts/inter/inter-600.woff2);font-weight:600;font-display:swap}@font-face{font-family:JetBrainsMono;src:url(../fonts/jetbrains-mono/jetbrains-mono-400.woff2);font-weight:400;font-display:swap}@font-face{font-family:JetBrainsMono;src:url(../fonts/jetbrains-mono/jetbrains-mono-500.woff2);font-weight:500;font-display:swap}
