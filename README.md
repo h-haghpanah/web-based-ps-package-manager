@@ -78,6 +78,37 @@ By default, files sent to the PS5 are placed in `/data/etaHEN/games`, using sing
 
 > **Note:** If you have **ShadowMount** or **etaHEN's ShadowMount Plus** payload active on your PS5, games will be installed automatically once received.
 
+#### PS5 Send Method
+When **PS5** is selected, a **PS5 Send Method** option appears in Settings so you can choose which homebrew receives the packages:
+
+| Method | Payload | Port |
+| --- | --- | --- |
+| `ps5_file_downloader` | [ps5_file_downloader](https://github.com/h-haghpanah/ps5_file_downloader) | 8283 |
+| `pkg_receiver` | `loopayeh-pkg_receiver` | 12800 |
+
+The setting is stored in `config.ini` as `ps5_send_method` under the `[ps]` section. PS4 is unaffected and keeps using its own payload.
+
+#### pkg_receiver behaviour
+The receiver exposes two different transfer paths and the app picks one per file:
+
+- **`.pkg` files** go to `POST /api/install`, which hands the URL to the system installer. The console downloads the package itself and the result appears as a toast on screen, so only a running/finished state is available to the app.
+- **Every other file** (`.exfat`, `.ffpkg`, `.ffpfsc`, ...) goes to `POST /api/files/pull` with a destination inside `/data/homebrew`, which is the only jail the receiver accepts. This path reports real byte level progress.
+
+Before a pull the app calls `GET /api/files/stat`; if a smaller partial file is already on the console the transfer is sent with `mode: resume`, otherwise it overwrites. It also sends `{"paused":0}` to `POST /api/pull/pause` first, because that flag is global and survives the previous transfer.
+
+#### Download Monitor
+With `pkg_receiver` selected, a download icon appears next to the settings button. The panel polls the console every two seconds and shows:
+
+- the receiver build from `GET /api/version` and whether the console still hears this PC from `GET /api/pc` (an announcement older than 15s is treated as stale),
+- busy state and job count from `GET /api/status`, plus `pullName`, `pullGot` and `pullWant` for the active copy,
+- per file progress, with the size of finished or stopped transfers read back from `GET /api/fs/list` and `GET /api/files/stat`,
+- **Pause / Resume** for the running copy, and **Clear Finished** to drop completed entries.
+
+Transfer speed and ETA are calculated from the difference between two polls, since the receiver does not report them. When `pullWant` is `-1` (the source sent no `Content-Length`) the total size recorded at send time is used instead. Sent packages are tracked in `receiver_jobs.json`.
+
+#### Console Discovery
+The receiver broadcasts a `PKGSENDER` beacon to UDP port 12801 every three seconds. With `pkg_receiver` selected, a **Scan Network** button appears under **PS IP Addresses** in Settings; it listens for a few seconds and appends any console that answers.
+
 ## Using RAWG API
 To fetch game metadata using the RAWG API:
 

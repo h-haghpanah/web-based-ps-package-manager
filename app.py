@@ -2,16 +2,22 @@
 from flask import Flask, render_template, send_from_directory, jsonify, request
 import requests
 import os
-from api import rawg_search, package_sender, update_xml_file
+from api import (rawg_search, package_sender, update_xml_file, receiver_probe, receiver_status,
+                 receiver_file_stat, receiver_fs_list, receiver_version, receiver_pc, receiver_pause,
+                 discover_receivers, RECEIVER_ROOT)
 import xml.etree.ElementTree as ET
 import json
 from tools import clean_url, parse_string_to_list
 import configparser
 import urllib.parse
+import time
 
 
 LOCAL_PKG_PATH = "local_pkg"
 SELECTED_PS_FILE_PATH = "selected_ps_ip.txt"
+RECEIVER_JOBS_FILE = "receiver_jobs.json"
+PS5_SEND_METHOD_DEFAULT = "haghpanah-ps5_file_downloader"
+PS5_SEND_METHOD_RECEIVER = "loopayeh-pkg_receiver"
 
 if not os.path.exists(LOCAL_PKG_PATH):
     os.mkdir(LOCAL_PKG_PATH)
@@ -44,6 +50,7 @@ rawg_api_key =
 local_pkg_enabled = True
 addresses = []
 repository_type = ps4
+ps5_send_method = haghpanah-ps5_file_downloader
     """
     if not os.path.isfile(config_file):
         with open(config_file, 'w') as file:
@@ -51,6 +58,91 @@ repository_type = ps4
     config_path = os.path.join(dirname, config_file)
     config.read(config_path)
     return config
+
+
+def get_ps5_send_method(config):
+    try:
+        method = config.get("ps", "ps5_send_method")
+    except Exception as e:
+        print(e)
+        method = PS5_SEND_METHOD_DEFAULT
+    if method not in (PS5_SEND_METHOD_DEFAULT, PS5_SEND_METHOD_RECEIVER):
+        method = PS5_SEND_METHOD_DEFAULT
+    return method
+
+
+def read_receiver_jobs():
+    if not os.path.isfile(RECEIVER_JOBS_FILE):
+        return []
+    try:
+        with open(RECEIVER_JOBS_FILE, "r") as file:
+            return json.load(file)
+    except Exception as e:
+        print(e)
+        return []
+
+
+def write_receiver_jobs(jobs):
+    try:
+        with open(RECEIVER_JOBS_FILE, "w") as file:
+            json.dump(jobs, file)
+    except Exception as e:
+        print(e)
+
+
+def add_receiver_job(ps_ip, pkg_url, pkg_file, total_size, title, kind):
+    jobs = read_receiver_jobs()
+    # one job per console + file: a re-send restarts the same download
+    jobs = [job for job in jobs if not (job["ps_ip"] == ps_ip and job["file"] == pkg_file)]
+    jobs.append({
+        "ps_ip": ps_ip,
+        "file": pkg_file,
+        "url": pkg_url,
+        "title": title,
+        "kind": kind,
+        "total_size": total_size,
+        "created_at": time.time(),
+    })
+    write_receiver_jobs(jobs)
+
+
+def get_selected_ps_ip():
+    try:
+        with open(SELECTED_PS_FILE_PATH, 'r') as file:
+            return file.read().strip()
+    except Exception as e:
+        print(e)
+        return ""
+
+
+def get_pkg_total_size(local_pkg_enabled, relative_path, pkg_url):
+    if local_pkg_enabled:
+        try:
+            return os.path.getsize(os.path.join(LOCAL_PKG_PATH, relative_path))
+        except Exception as e:
+            print(e)
+            return 0
+    try:
+        response = requests.head(pkg_url, allow_redirects=True, timeout=5)
+        return int(response.headers.get("Content-Length", 0))
+    except Exception as e:
+        print(e)
+        return 0
+
+
+def get_game_icon_url(game_name):
+    xml_path = os.path.join("assets/game_info", game_name + ".xml")
+    if not os.path.exists(xml_path):
+        return None
+    try:
+        image = ET.parse(xml_path).getroot().find("background_image").text
+    except Exception as e:
+        print(e)
+        return None
+    # the receiver can only fetch absolute urls, local asset paths are useless to it
+    if image and image.startswith(("http://", "https://")):
+        return image
+    return None
 
 
 app = Flask(__name__)
@@ -345,13 +437,15 @@ def read_config():
     local_pkg_enabled = config.getboolean("ps", "local_pkg_enabled")
     ps_addresses = config.get("ps", "addresses")
     repository_type = config.get("ps", "repository_type")
+    ps5_send_method = get_ps5_send_method(config)
     ps_addresses = json.loads(ps_addresses)
     ps_addresses_str = ""
     for address in ps_addresses:
         ps_addresses_str += f'{address["name"]}={address["ip_address"]}\n'
     return jsonify({"status": True, "data": {"web_title": web_title, "local_system_ip_address": local_system_ip_address, "remote_web_server_address": remote_web_server_address,
                                              "rawg_api_enabled": rawg_api_enabled, "rawg_api_key": rawg_api_key, "local_pkg_enabled": local_pkg_enabled,
-                                             "ps_addresses": ps_addresses_str, "repository_type": repository_type}})
+                                             "ps_addresses": ps_addresses_str, "repository_type": repository_type,
+                                             "ps5_send_method": ps5_send_method}})
 
 
 @app.route('/submit_config', methods=['POST'])
@@ -362,6 +456,9 @@ def submit_config():
     rawg_api_enabled = request.form.get("rawg_api_enabled")
     rawg_api_key = request.form.get("rawg_api_key")
     repository_type = request.form.get("repository_type")
+    ps5_send_method = request.form.get("ps5_send_method")
+    if ps5_send_method not in (PS5_SEND_METHOD_DEFAULT, PS5_SEND_METHOD_RECEIVER):
+        ps5_send_method = PS5_SEND_METHOD_DEFAULT
     web_title = request.form.get("web_title")
     ps_ip_addresses = request.form.get("ps_ip_addresses")
     config = get_config()
@@ -421,6 +518,7 @@ def submit_config():
         "LOCAL_PKG_ENABLED": local_pkg_enabled,
         'ADDRESSES': ps_addresses,
         'REPOSITORY_TYPE': repository_type,
+        'PS5_SEND_METHOD': ps5_send_method,
     }
 
     with open('config.ini', 'w') as configfile:
@@ -437,6 +535,7 @@ def send_pkg(path):
     local_operating_system_ip_address = config.get("local_system", "ip_address")
     local_web_server_port = config.get("local_webserver", "local_port")
     repository_type = config.get("ps", "repository_type")
+    ps5_send_method = get_ps5_send_method(config)
     if local_pkg_enabled:
         pkg_url = f"http://{local_operating_system_ip_address}:{local_web_server_port}/{LOCAL_PKG_PATH}/{path}"
     else:
@@ -446,12 +545,23 @@ def send_pkg(path):
         with open(SELECTED_PS_FILE_PATH, 'r') as file:
             ps_ip = file.read()
             file.close()
-        response = package_sender(pkg_url=pkg_url, ps_ip=ps_ip, pkg_type=repository_type)
+        path_parts = path.split("/")
+        game_name = path_parts[0]
+        pkg_file = path_parts[-1]
+        use_receiver = repository_type == "ps5" and ps5_send_method == PS5_SEND_METHOD_RECEIVER
+        total_size = get_pkg_total_size(local_pkg_enabled, path, pkg_url) if use_receiver else 0
+        response = package_sender(pkg_url=pkg_url, ps_ip=ps_ip, pkg_type=repository_type,
+                                  ps5_send_method=ps5_send_method, pkg_name=game_name,
+                                  icon_url=get_game_icon_url(game_name), pkg_file=pkg_file,
+                                  total_size=total_size)
         if "status" in response and response["status"] == "success":
             status = True
         else:
             status = False
-        return jsonify({"success": status})
+        if status and use_receiver:
+            add_receiver_job(ps_ip, pkg_url, pkg_file, total_size, game_name,
+                             response.get("kind", "install"))
+        return jsonify({"success": status, "error": response.get("error")})
     except FileNotFoundError:
         with open(SELECTED_PS_FILE_PATH, 'w') as file:
             file.write('')
@@ -507,6 +617,118 @@ def read_ps_addresses():
     except Exception as e:
         print(e)
         return jsonify({"success": False})
+
+
+@app.route('/receiver_downloads', methods=['GET'])
+def receiver_downloads():
+    config = get_config()
+    repository_type = config.get("ps", "repository_type")
+    ps5_send_method = get_ps5_send_method(config)
+    if repository_type != "ps5" or ps5_send_method != PS5_SEND_METHOD_RECEIVER:
+        return jsonify({"status": False, "error": "The selected send method does not support download monitoring."})
+    ps_ip = get_selected_ps_ip()
+    if not ps_ip:
+        return jsonify({"status": False, "error": "No console selected."})
+    if not receiver_probe(ps_ip):
+        return jsonify({"status": False, "error": "Receiver is not reachable."})
+    state = receiver_status(ps_ip)
+    listing = receiver_fs_list(ps_ip)
+    sizes_on_console = {}
+    for entry in listing.get("entries", []):
+        if not entry.get("dir"):
+            sizes_on_console[entry.get("name")] = entry.get("size", 0)
+    active_pull = state.get("pull") and state.get("pullName")
+    downloads = []
+    for job in read_receiver_jobs():
+        if job.get("ps_ip") != ps_ip:
+            continue
+        pkg_file = job.get("file")
+        total_size = job.get("total_size") or 0
+        downloaded = 0
+        if job.get("kind") == "install":
+            # the installer does not expose bytes, only whether a job is still running
+            state_name = "installing" if state.get("active", 0) > 0 else "sent"
+            percent = None
+            total_size = 0
+        else:
+            if active_pull and state.get("pullName") == pkg_file:
+                downloaded = state.get("pullGot", 0)
+                # pullWant is -1 when the source sent no content length
+                if state.get("pullWant", -1) > 0:
+                    total_size = state.get("pullWant")
+                state_name = "paused" if state.get("pullPaused") else "downloading"
+            else:
+                if pkg_file in sizes_on_console:
+                    downloaded = sizes_on_console[pkg_file]
+                else:
+                    stat = receiver_file_stat(ps_ip, f"{RECEIVER_ROOT}/{pkg_file}")
+                    downloaded = stat.get("size", 0) if stat.get("exists") else 0
+                if total_size > 0 and downloaded >= total_size:
+                    state_name = "finished"
+                elif downloaded > 0:
+                    state_name = "stopped"
+                else:
+                    state_name = "pending"
+            percent = round(min(downloaded / total_size, 1) * 100, 1) if total_size > 0 else None
+        downloads.append({"file": pkg_file, "title": job.get("title"), "kind": job.get("kind"),
+                          "downloaded": downloaded, "total": total_size, "percent": percent,
+                          "state": state_name})
+    pc = receiver_pc(ps_ip)
+    return jsonify({"status": True, "data": {
+        "ps_ip": ps_ip,
+        "build": receiver_version(ps_ip),
+        "busy": state.get("busy", False),
+        "active": state.get("active", 0),
+        "pulling": bool(active_pull),
+        "paused": state.get("pullPaused", False),
+        "pc_ip": pc.get("pc", ""),
+        "pc_age": pc.get("age", -1),
+        "truncated": bool(listing.get("truncated")),
+        "downloads": downloads,
+    }})
+
+
+@app.route('/receiver_pause', methods=['POST'])
+def receiver_pause_transfer():
+    ps_ip = get_selected_ps_ip()
+    if not ps_ip:
+        return jsonify({"status": False})
+    paused = request.form.get("paused") == "true"
+    result = receiver_pause(ps_ip, paused)
+    return jsonify({"status": "error" not in result, "paused": result.get("paused", paused)})
+
+
+@app.route('/receiver_discover', methods=['GET'])
+def receiver_discover():
+    addresses = discover_receivers()
+    return jsonify({"status": True, "addresses": addresses})
+
+
+@app.route('/receiver_clear_finished', methods=['POST'])
+def receiver_clear_finished():
+    ps_ip = get_selected_ps_ip()
+    if not ps_ip:
+        return jsonify({"status": False})
+    state = receiver_status(ps_ip)
+    kept = []
+    for job in read_receiver_jobs():
+        if job.get("ps_ip") != ps_ip:
+            kept.append(job)
+            continue
+        if job.get("kind") == "install":
+            if state.get("active", 0) > 0:
+                kept.append(job)
+            continue
+        if state.get("pull") and state.get("pullName") == job.get("file"):
+            kept.append(job)
+            continue
+        total_size = job.get("total_size") or 0
+        stat = receiver_file_stat(ps_ip, f"{RECEIVER_ROOT}/{job.get('file')}")
+        downloaded = stat.get("size", 0) if stat.get("exists") else 0
+        if not (total_size > 0 and downloaded >= total_size):
+            kept.append(job)
+    write_receiver_jobs(kept)
+    return jsonify({"status": True})
 
 
 @app.route('/assets/<path:path>', methods=['GET', 'POST'])

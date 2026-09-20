@@ -56,7 +56,7 @@ function send_pkg(path, pkg_btn_id){
             if (response.success){
                 showsuccess("Package Sent Successfully.");
             } else {
-                showerror("Something Wrong.");
+                showerror(response.error || "Something Wrong.");
             }
         },
         error: function(){

@@ -3,9 +3,160 @@ import json
 from urllib.parse import urlsplit, urlunsplit, quote, unquote
 import xml.etree.ElementTree as ET
 import os
+import socket
+import time
 
 
-def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaHEN/games"):
+RECEIVER_PORT = 12800
+RECEIVER_ROOT = "/data/homebrew"
+RECEIVER_TIMEOUT = 10
+RECEIVER_DISCOVERY_PORT = 12801
+RECEIVER_BEACON = b"PKGSENDER"
+
+
+def receiver_endpoint(ps_ip, path):
+    return f"http://{ps_ip}:{RECEIVER_PORT}{path}"
+
+
+def receiver_parse(response):
+    # every reply is http 200: json, an "error:" line, a plain ok line, or the webui html
+    text = response.text.strip()
+    if text.startswith("{"):
+        try:
+            return json.loads(text)
+        except Exception as e:
+            print(e)
+            return {"error": "invalid json reply"}
+    if text.startswith("error:"):
+        return {"error": text[len("error:"):].strip()}
+    if "test build, installs disabled" in text:
+        return {"error": "receiver is a TEST_ONLY build, installs are disabled"}
+    if text.startswith("ok:") or text.startswith("SUCCESS"):
+        return {"status": "success"}
+    if text.startswith("FAILED"):
+        return {"error": text}
+    return {"error": "unexpected reply from receiver"}
+
+
+def receiver_get(ps_ip, path, params=None):
+    try:
+        response = requests.get(receiver_endpoint(ps_ip, path), params=params, timeout=RECEIVER_TIMEOUT)
+        return receiver_parse(response)
+    except Exception as e:
+        print(e)
+        return {"error": "receiver is not reachable"}
+
+
+def receiver_post(ps_ip, path, payload):
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.post(receiver_endpoint(ps_ip, path), data=json.dumps(payload),
+                                 headers=headers, timeout=RECEIVER_TIMEOUT)
+        return receiver_parse(response)
+    except Exception as e:
+        print(e)
+        return {"error": "receiver is not reachable"}
+
+
+def receiver_probe(ps_ip):
+    # /api always answers with a json body, unknown GET paths answer with html instead
+    return "status" in receiver_get(ps_ip, "/api")
+
+
+def receiver_version(ps_ip):
+    return receiver_get(ps_ip, "/api/version").get("build")
+
+
+def receiver_pc(ps_ip):
+    return receiver_get(ps_ip, "/api/pc")
+
+
+def receiver_status(ps_ip):
+    return receiver_get(ps_ip, "/api/status")
+
+
+def receiver_file_stat(ps_ip, remote_path):
+    return receiver_get(ps_ip, "/api/files/stat", {"path": remote_path})
+
+
+def receiver_fs_list(ps_ip, remote_path=RECEIVER_ROOT):
+    return receiver_get(ps_ip, "/api/fs/list", {"path": remote_path})
+
+
+def receiver_pause(ps_ip, paused):
+    # the flag is read as a number and is global, so true would unpause and it outlives a transfer
+    return receiver_post(ps_ip, "/api/pull/pause", {"paused": 1 if paused else 0})
+
+
+def receiver_install(pkg_url, ps_ip, name=None, icon_url=None):
+    payload = {
+        "packages": [pkg_url]
+    }
+    if name:
+        payload["name"] = name
+    if icon_url:
+        payload["icon_url"] = icon_url
+    return receiver_post(ps_ip, "/api/install", payload)
+
+
+def receiver_pull(file_url, ps_ip, remote_path, mode="overwrite"):
+    return receiver_post(ps_ip, "/api/files/pull", {"url": file_url, "path": remote_path, "mode": mode})
+
+
+def receiver_send(pkg_url, ps_ip, pkg_file, total_size=0, name=None, icon_url=None):
+    # .pkg goes through the installer, single file game formats are pulled into /data/homebrew
+    if pkg_file.lower().endswith(".pkg"):
+        result = receiver_install(pkg_url, ps_ip, name=name, icon_url=icon_url)
+        result["kind"] = "install"
+        return result
+    remote_path = f"{RECEIVER_ROOT}/{pkg_file}"
+    stat = receiver_file_stat(ps_ip, remote_path)
+    if stat.get("exists") and 0 < stat.get("size", 0) < total_size:
+        mode = "resume"
+    else:
+        mode = "overwrite"
+    receiver_pause(ps_ip, False)
+    result = receiver_pull(pkg_url, ps_ip, remote_path, mode)
+    if result.get("ok"):
+        result["status"] = "success"
+    result["kind"] = "pull"
+    result["mode"] = mode
+    return result
+
+
+def discover_receivers(timeout=4):
+    # the payload broadcasts "PKGSENDER v1" every 3s, only the sender address matters
+    found = []
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    except Exception as e:
+        print(e)
+    try:
+        sock.bind(("", RECEIVER_DISCOVERY_PORT))
+    except Exception as e:
+        print(e)
+        sock.close()
+        return found
+    sock.settimeout(1)
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            data, address = sock.recvfrom(256)
+        except Exception:
+            continue
+        if data.startswith(RECEIVER_BEACON) and address[0] not in found:
+            found.append(address[0])
+    sock.close()
+    return found
+
+
+def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaHEN/games",
+                   ps5_send_method="haghpanah-ps5_file_downloader", pkg_name=None, icon_url=None,
+                   pkg_file=None, total_size=0):
     headers = {
             "Content-Type": "application/json"
     }
@@ -26,6 +177,11 @@ def package_sender(pkg_url, ps_ip, pkg_type="ps4", local_destination="/data/etaH
         response = requests.post(endpoint, data=json.dumps(data), headers=headers)
         return json.loads(response.text)
     elif pkg_type == "ps5":
+        if ps5_send_method == "loopayeh-pkg_receiver":
+            if not pkg_file:
+                pkg_file = unquote(urlsplit(pkg_url).path.split("/")[-1])
+            return receiver_send(pkg_url=pkg_url, ps_ip=ps_ip, pkg_file=pkg_file,
+                                 total_size=total_size, name=pkg_name, icon_url=icon_url)
         endpoint = f"http://{ps_ip}:8283/api/v1/get_file"
         data = {
             "url": pkg_url,

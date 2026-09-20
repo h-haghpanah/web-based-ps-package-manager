@@ -169,3 +169,4 @@ local_pkg/
 selected_ps_ip.txt
 *.pkg
 config.ini
+receiver_jobs.json
